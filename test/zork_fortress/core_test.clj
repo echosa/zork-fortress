@@ -4,4 +4,4 @@
 
 (deftest test-default-prompt
   (testing "Default prompt should be '>'."
-    (is (= "Player 1| > " (get-user-prompt {:name "Player 1"})))))
+    (is (= "Player 1 | > " (get-user-prompt {:name "Player 1"})))))

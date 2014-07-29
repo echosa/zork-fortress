@@ -7,7 +7,7 @@
 (defn get-user-prompt
   "Return the correct current prompt for the user."
   [user]
-  (str (:name user) "| > "))
+  (str (:name user) " | > "))
   
 (t/ann welcome-message [-> String])
 (defn welcome-message
