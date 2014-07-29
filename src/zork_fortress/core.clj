@@ -34,6 +34,9 @@
   "Returns a new, initialized game."
   []
   {:player {:name "Player"}
+   :world {:areas [{:name "Starting Area"
+                    :type "Plains"
+                    :trees 9}]}
    :turn-history []})
 
 (t/ann -main [t/Any -> t/Any])
