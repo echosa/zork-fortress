@@ -33,11 +33,12 @@
 (defn get-new-game
   "Returns a new, initialized game."
   []
-  {:player {:name "Player"}})
+  {:player {:name "Player"}
+   :turn-history []})
 
 (t/ann -main [t/Any -> t/Any])
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Main entry point to start the game and get into the game loop."
   [& args]
   (println (welcome-message))
   (game-loop (get-new-game)))

@@ -8,10 +8,12 @@
 (t/defalias Turn
   "A single player turn including command and response."
   (t/HMap :mandatory {:command t/Symbol
-                      :response String}))
-  
+                      :response String}
+          :optional {:invalid t/Bool}))
+
 (t/defalias Game
   "The game."
-  (t/HMap :mandatory {:player Player}
+  (t/HMap :mandatory {:player Player
+                      :turn-history (t/Vec (t/Option Turn))}
           :optional {:last-turn Turn}))
 
