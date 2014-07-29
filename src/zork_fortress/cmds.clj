@@ -13,12 +13,10 @@
   "Run the given command."
   [game command]
   (merge game 
-         {:last-turn (condp = command
-                       'look {:command command 
-                              :response (look-cmd game)}
-                       {:command command 
-                        :response "Invalid command."
-                        :invalid true})
+         {:last-turn (merge {:command command}
+                             (condp = command
+                               'look {:response (look-cmd game)}
+                               {:response "Invalid command." :invalid true}))
           :turn-history (if (and (:last-turn game) (not (:invalid (:last-turn game))))
                           (conj (:turn-history game) (:last-turn game))
                           (:turn-history game))}))
