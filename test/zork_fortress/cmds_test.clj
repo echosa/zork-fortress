@@ -77,3 +77,88 @@
                                      :response "First message."}]}
                     'look)))))
 
+(deftest test-history-command-should-default-to-4-items
+  (testing "History command should display 4 items."
+    (is (= {:player {:name "Player"}
+            :world {:areas [{:name "First Area" :type "Plains"}]}
+            :last-turn {:command 'history
+                        :response "*** START HISTORY ***
+> second
+
+Second message.
+
+> third
+
+Third message.
+
+> fourth
+
+Fourth message.
+
+> fifth
+
+Fifth message.
+*** END HISTORY ***"}
+            :turn-history [{:command 'first
+                            :response "First message."}
+                           {:command 'second
+                            :response "Second message."}
+                           {:command 'third
+                            :response "Third message."}
+                           {:command 'fourth
+                            :response "Fourth message."}
+                           {:command 'fifth
+                            :response "Fifth message."}]}
+           (run-cmd {:player {:name "Player"}
+                     :world {:areas [{:name "First Area" :type "Plains"}]}
+                     :last-turn {:command 'foobar
+                                 :response "Invalid command."
+                                 :invalid true}
+                     :turn-history [{:command 'first
+                                     :response "First message."}
+                                    {:command 'second
+                                     :response "Second message."}
+                                    {:command 'third
+                                     :response "Third message."}
+                                    {:command 'fourth
+                                     :response "Fourth message."}
+                                    {:command 'fifth
+                                     :response "Fifth message."}]}
+                    'history)))))
+
+(deftest test-history-command-with-less-than-4-should-display-less-than-4-items
+  (testing "History command should be able to display less than 4 items."
+    (is (= {:player {:name "Player"}
+            :world {:areas [{:name "First Area" :type "Plains"}]}
+            :last-turn {:command 'history
+                        :response "*** START HISTORY ***
+> first
+
+First message.
+
+> second
+
+Second message.
+
+> third
+
+Third message.
+*** END HISTORY ***"}
+            :turn-history [{:command 'first
+                            :response "First message."}
+                           {:command 'second
+                            :response "Second message."}
+                           {:command 'third
+                            :response "Third message."}]}
+           (run-cmd {:player {:name "Player"}
+                     :world {:areas [{:name "First Area" :type "Plains"}]}
+                     :last-turn {:command 'foobar
+                                 :response "Invalid command."
+                                 :invalid true}
+                     :turn-history [{:command 'first
+                                     :response "First message."}
+                                    {:command 'second
+                                     :response "Second message."}
+                                    {:command 'third
+                                     :response "Third message."}]}
+                    'history)))))
