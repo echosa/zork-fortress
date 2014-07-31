@@ -162,3 +162,51 @@ Third message.
                                     {:command 'third
                                      :response "Third message."}]}
                     'history)))))
+
+(deftest test-history-command-should-not-be-added-to-history
+  (testing "History command should not be added to the history."
+    (is (= {:player {:name "Player"}
+            :world {:areas [{:name "First Area" :type "Plains"}]}
+            :last-turn {:command 'history
+                        :response "*** START HISTORY ***
+> first
+
+First message.
+
+> second
+
+Second message.
+
+> third
+
+Third message.
+*** END HISTORY ***"}
+            :turn-history [{:command 'first
+                            :response "First message."}
+                           {:command 'second
+                            :response "Second message."}
+                           {:command 'third
+                            :response "Third message."}]}
+           (run-cmd {:player {:name "Player"}
+                     :world {:areas [{:name "First Area" :type "Plains"}]}
+                     :last-turn {:command 'history
+                                 :response "*** START HISTORY ***
+> first
+
+First message.
+
+> second
+
+Second message.
+
+> third
+
+Third message.
+*** END HISTORY ***"}
+                     :turn-history [{:command 'first
+                                     :response "First message."}
+                                    {:command 'second
+                                     :response "Second message."}
+                                    {:command 'third
+                                     :response "Third message."}]}
+                    'history)))))
