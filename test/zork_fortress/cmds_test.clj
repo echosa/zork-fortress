@@ -1,14 +1,11 @@
 (ns zork-fortress.cmds-test
   (:require [clojure.test :refer :all]
-            [zork-fortress.cmds :refer :all]))
+            [zork-fortress.cmds :refer :all]
+            [zork-fortress.test-helpers :as h]))
 
 (deftest test-running-command-without-previous-turn
   (testing "Look command should return message."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'look
-                        :response "You see nothing."}
-            :turn-history []}
+    (is (= (h/get-test-game)
            (run-cmd {:player {:name "Player"}
                      :world {:areas [{:name "First Area" :type "Plains"}]}
                      :turn-history []}

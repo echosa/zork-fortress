@@ -8,7 +8,8 @@
   :plugins [[lein-cloverage "1.0.2"]
             [lein-typed "0.3.5"]]
   :repositories {"sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"}
-  :core.typed {:check [zork-fortress.core]}
+  :core.typed {:check [zork-fortress.core
+                       zork-fortress.test-helpers]}
   :main ^:skip-aot zork-fortress.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
