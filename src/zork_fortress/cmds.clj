@@ -9,24 +9,28 @@
   [game]
   "You see nothing.")
 
+(t/ann turn-history-string [t2/Turn -> String])
+(defn turn-history-string
+  "Return the history output for the turn."
+  [turn]
+  (str "\n> " (:command turn) "\n\n" (:response turn) "\n"))
+
 (t/ann clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
 (t/ann history-cmd [t2/Game -> String])
 (defn history-cmd
   "The history command."
   [game]
   (let [last-turn (when (and (not (nil? (:last-turn game)))
-                             (not (= true (:invalid (:last-turn game))))
-                             (not (= 'history (:command (:last-turn game)))))
+                             (not= true (:invalid (:last-turn game)))
+                             (not= 'history (:command (:last-turn game))))
                     (:last-turn game))]
     (str "*** START HISTORY ***"
-         (w/walk #(str "\n> " (:command %) "\n\n" (:response %) "\n")
+         (w/walk (fn [a] {:pre [((t/pred t2/Turn) a)]} (turn-history-string a))
                  (fn [a] {:pre [((t/pred (t/U nil (t/Coll t/Any))) a)]} (apply str a))
                  (if (< (count (:turn-history game)) 4)
                    (:turn-history game)
                    (subvec (:turn-history game) (- (count (:turn-history game)) 4))))
-         (if last-turn 
-           (str "\n> " (:command last-turn) "\n\n" (:response last-turn) "\n")
-           "")
+         (if (nil? last-turn) "" (turn-history-string last-turn))
          "*** END HISTORY ***")))
 
 (t/ann run-cmd [t2/Game t/Symbol -> t2/Game])
