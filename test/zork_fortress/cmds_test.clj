@@ -3,83 +3,69 @@
             [zork-fortress.cmds :refer :all]
             [zork-fortress.test-helpers :as h]))
 
-(deftest test-running-command-without-previous-turn
+(deftest test-commands-should-set-last-turn
   (testing "Look command should return message."
-    (is (= (h/get-test-game)
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :turn-history []}
-                    'look)))))
+    (let [game (h/get-test-game)]
+      (is (= nil (:last-turn game))
+          (= {:command 'look :response "You see nothing."}
+             (:last-turn (run-cmd game 'look)))))))
 
-(deftest test-running-command-with-previous-turn
+(deftest test-commands-should-set-history
   (testing "Look command should return message."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'look
-                        :response "You see nothing."}
-            :turn-history [{:command 'prev
-                            :response "Previous command."}]}
-           (run-cmd {:player {:name "Player"}
-                     :last-turn {:command 'prev
-                                 :response "Previous command."}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :turn-history []}
-                    'look)))))
+    (let [game (h/get-test-game :last-turn {:command 'prev
+                                            :response "Previous command."})]
+      (is (= [] (:turn-history game))
+          (= [{:command 'prev :response "Previous command."}]
+             (:turn-history (run-cmd game 'look)))))))
 
-(deftest test-running-invalid-command
+(deftest test-invalid-commands-are-marked-as-such
   (testing "Invalid command should respond as such."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'foobar
-                        :response "Invalid command."
-                        :invalid true}
-            :turn-history []}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :turn-history []}
-                    'foobar)))))
+    (let [game (h/get-test-game)]
+      (is (= {:command 'foobar
+              :response "Invalid command."
+              :invalid true}
+              (:last-turn (run-cmd game 'foobar)))))))
 
 (deftest test-valid-commands-should-be-added-to-history
   (testing "Valid commands should be added to the command history."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'look
-                        :response "You see nothing."}
-            :turn-history [{:command 'first
-                            :response "First message."}
-                           {:command 'previous
-                            :response "Previous message."}]}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :last-turn {:command 'previous
-                                 :response "Previous message."}
-                     :turn-history [{:command 'first
-                                     :response "First message."}]}
-                    'look)))))
+    (let [last-turn {:command 'previous
+                     :response "Previous message."}
+          turn-history [{:command 'first
+                         :response "First message."}]
+          game (h/get-test-game :last-turn last-turn
+                                :turn-history turn-history)]
+      (is (= (conj turn-history last-turn)
+             (:turn-history (run-cmd game 'look)))))))
 
 (deftest test-invalid-commands-should-not-be-added-to-history
   (testing "Valid commands should be added to the command history."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'look
-                        :response "You see nothing."}
-            :turn-history [{:command 'first
-                            :response "First message."}]}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :last-turn {:command 'foobar
-                                 :response "Invalid command."
-                                 :invalid true}
-                     :turn-history [{:command 'first
-                                     :response "First message."}]}
-                    'look)))))
+    (let [last-turn {:command 'foobar
+                     :response "Invalid command."
+                     :invalid true}
+          turn-history [{:command 'first
+                         :response "First message."}]
+          game (h/get-test-game :last-turn last-turn
+                                :turn-history turn-history)]
+      (is (= turn-history
+             (:turn-history (run-cmd game 'look)))))))
+
 
 (deftest test-history-command-should-default-to-4-items
   (testing "History command should display 4 items."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'history
-                        :response "*** START HISTORY ***
+    (let [game (h/get-test-game :last-turn {:command 'foobar
+                                            :response "Invalid command."
+                                            :invalid true}
+                                :turn-history [{:command 'first
+                                                :response "First message."}
+                                               {:command 'second
+                                                :response "Second message."}
+                                               {:command 'third
+                                                :response "Third message."}
+                                               {:command 'fourth
+                                                :response "Fourth message."}
+                                               {:command 'fifth
+                                                :response "Fifth message."}])]
+      (is (= "*** START HISTORY ***
 > second
 
 Second message.
@@ -95,40 +81,22 @@ Fourth message.
 > fifth
 
 Fifth message.
-*** END HISTORY ***"}
-            :turn-history [{:command 'first
-                            :response "First message."}
-                           {:command 'second
-                            :response "Second message."}
-                           {:command 'third
-                            :response "Third message."}
-                           {:command 'fourth
-                            :response "Fourth message."}
-                           {:command 'fifth
-                            :response "Fifth message."}]}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :last-turn {:command 'foobar
-                                 :response "Invalid command."
-                                 :invalid true}
-                     :turn-history [{:command 'first
-                                     :response "First message."}
-                                    {:command 'second
-                                     :response "Second message."}
-                                    {:command 'third
-                                     :response "Third message."}
-                                    {:command 'fourth
-                                     :response "Fourth message."}
-                                    {:command 'fifth
-                                     :response "Fifth message."}]}
-                    'history)))))
+*** END HISTORY ***"
+             (:response (:last-turn (run-cmd game 'history))))))))
+
 
 (deftest test-history-command-with-less-than-4-should-display-less-than-4-items
   (testing "History command should be able to display less than 4 items."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'history
-                        :response "*** START HISTORY ***
+    (let [game (h/get-test-game :last-turn {:command 'foobar
+                                            :response "Invalid command."
+                                            :invalid true}
+                                :turn-history [{:command 'first
+                                                :response "First message."}
+                                               {:command 'second
+                                                :response "Second message."}
+                                               {:command 'third
+                                                :response "Third message."}])]
+      (is (= "*** START HISTORY ***
 > first
 
 First message.
@@ -140,32 +108,13 @@ Second message.
 > third
 
 Third message.
-*** END HISTORY ***"}
-            :turn-history [{:command 'first
-                            :response "First message."}
-                           {:command 'second
-                            :response "Second message."}
-                           {:command 'third
-                            :response "Third message."}]}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :last-turn {:command 'foobar
-                                 :response "Invalid command."
-                                 :invalid true}
-                     :turn-history [{:command 'first
-                                     :response "First message."}
-                                    {:command 'second
-                                     :response "Second message."}
-                                    {:command 'third
-                                     :response "Third message."}]}
-                    'history)))))
+*** END HISTORY ***"
+             (:response (:last-turn (run-cmd game 'history))))))))
 
 (deftest test-history-command-should-not-be-added-to-history
   (testing "History command should not be added to the history."
-    (is (= {:player {:name "Player"}
-            :world {:areas [{:name "First Area" :type "Plains"}]}
-            :last-turn {:command 'history
-                        :response "*** START HISTORY ***
+    (let [game (h/get-test-game :last-turn {:command 'history
+                                            :response "*** START HISTORY ***
 > first
 
 First message.
@@ -178,16 +127,13 @@ Second message.
 
 Third message.
 *** END HISTORY ***"}
-            :turn-history [{:command 'first
-                            :response "First message."}
-                           {:command 'second
-                            :response "Second message."}
-                           {:command 'third
-                            :response "Third message."}]}
-           (run-cmd {:player {:name "Player"}
-                     :world {:areas [{:name "First Area" :type "Plains"}]}
-                     :last-turn {:command 'history
-                                 :response "*** START HISTORY ***
+                                :turn-history [{:command 'first
+                                                :response "First message."}
+                                               {:command 'second
+                                                :response "Second message."}
+                                               {:command 'third
+                                                :response "Third message."}])]
+      (is (= "*** START HISTORY ***
 > first
 
 First message.
@@ -199,11 +145,5 @@ Second message.
 > third
 
 Third message.
-*** END HISTORY ***"}
-                     :turn-history [{:command 'first
-                                     :response "First message."}
-                                    {:command 'second
-                                     :response "Second message."}
-                                    {:command 'third
-                                     :response "Third message."}]}
-                    'history)))))
+*** END HISTORY ***"
+             (:response (:last-turn (run-cmd game 'history))))))))

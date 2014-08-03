@@ -15,12 +15,19 @@
   []
   {:areas [{:name "First Area" :type "Plains"}]})
 
-(t/ann get-test-game [-> t2/Game])
+(t/ann get-test-game [& :optional {:last-turn t2/Turn
+                                   :turn-history (t/Vec (t/Option t2/Turn))}
+                      -> t2/Game])
 (defn get-test-game
   "Returns a test game."
-  []
-  {:player (get-test-player)
-   :world (get-test-world)
-   :last-turn {:command 'look
-               :response "You see nothing."}
-   :turn-history []})
+  [& {:keys [last-turn turn-history]}]
+  (let [game {:player (get-test-player)
+              :world (get-test-world)
+              :turn-history []}
+        game (if (nil? last-turn)
+                game
+                (merge game {:last-turn last-turn}))
+        game (if (nil? turn-history)
+                game
+                (merge game {:turn-history turn-history}))]
+    game))
