@@ -15,7 +15,6 @@
   [turn]
   (str "\n> " (:command turn) "\n\n" (:response turn) "\n"))
 
-(t/ann clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
 (t/ann history-cmd [t2/Game & :optional {:args (t/Vec t/AnyInteger)} -> String])
 (defn history-cmd
   "The history command."

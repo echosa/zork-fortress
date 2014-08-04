@@ -4,6 +4,9 @@
 (t/defalias Player
   "The player."
   (t/HMap :mandatory {:name String}))
+(t/defalias Command
+  "A parsed command."
+  (t/HMap :mandatory {:command t/Symbol}))
 
 (t/defalias Turn
   "A single player turn including command and response."
@@ -42,3 +45,4 @@
                       :turn-history (t/Vec (t/Option Turn))}
           :optional {:last-turn Turn}))
 
+(t/ann clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])

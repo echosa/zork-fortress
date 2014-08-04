@@ -15,7 +15,13 @@
   "Print a welcome message for the user."
   []
   "Welcome! Try typing `look`.")
-  
+
+(t/ann parse-input [String -> t2/Command])
+(defn parse-input
+  "Parse the user input into a command."
+  [input]
+  {:command (symbol input)})
+
 (t/ann game-loop [t2/Game -> t/Any])
 (defn game-loop
   "The main game loop."
