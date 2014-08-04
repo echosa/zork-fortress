@@ -1,5 +1,6 @@
 (ns zork-fortress.core
   (:require [clojure.core.typed :as t]
+            [clojure.string :as s]
             [zork-fortress.types :as t2]
             [zork-fortress.cmds :as cmds])
   (:gen-class))
@@ -16,11 +17,17 @@
   []
   "Welcome! Try typing `look`.")
 
-(t/ann parse-input [String -> t2/Command])
+(t/ann parse-input [String -> (t/Option t2/Command)])
 (defn parse-input
   "Parse the user input into a command."
   [input]
-  {:command (symbol input)})
+  (let [parsed-string (s/split input #"\s+")
+        command (first parsed-string)
+        args (subvec parsed-string 1)]
+    (when (not (or (nil? command) (empty? command)))
+      (if (empty? args)
+        {:command (symbol command)}
+        {:command (symbol command) :args args}))))
 
 (t/ann game-loop [t2/Game -> t/Any])
 (defn game-loop
@@ -33,7 +40,8 @@
   (flush)
   (let [user-input (or (read-line) "")]
     (when-not (= user-input "quit")
-      (game-loop (cmds/run-cmd game (symbol user-input))))))
+      (let [command (symbol user-input)]
+        (game-loop (cmds/run-cmd game command))))))
 
 (t/ann get-new-game [-> t2/Game])
 (defn get-new-game

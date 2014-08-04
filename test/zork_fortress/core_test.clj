@@ -12,3 +12,9 @@
 (deftest test-parsing-input-without-arguments
   (testing "Input should be parsed as command."
     (is (= {:command 'look} (parse-input "look")))))
+
+(deftest test-parsing-input-with-arguments
+  (testing "Input should be parsed into command and arguments."
+    (is (= {:command 'history :args ["4"]}
+           (parse-input "history 4")))))
+
