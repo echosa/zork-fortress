@@ -149,7 +149,7 @@ Third message.
              (:response (:last-turn (run-cmd game 'history))))))))
 
 (deftest test-history-command-should-display-last-turn-if-valid
-  (testing "History command should be able to display less than 4 items."
+  (testing "History command should display the last turn, if it was valid."
     (let [game (h/get-test-game :last-turn {:command 'look
                                             :response "You see nothing."}
                                 :turn-history [{:command 'first
@@ -177,3 +177,23 @@ You see nothing.
 *** END HISTORY ***"
              (:response (:last-turn (run-cmd game 'history))))))))
 
+(deftest test-history-command-should-limit-display-to-given-count
+  (testing "History command should limit its display to the given count."
+    (let [game (h/get-test-game :last-turn {:command 'look
+                                            :response "You see nothing."}
+                                :turn-history [{:command 'first
+                                                :response "First message."}
+                                               {:command 'second
+                                                :response "Second message."}
+                                               {:command 'third
+                                                :response "Third message."}])]
+      (is (= "*** START HISTORY ***
+> third
+
+Third message.
+
+> look
+
+You see nothing.
+*** END HISTORY ***"
+             (:response (:last-turn (run-cmd game 'history :args [2]))))))))
