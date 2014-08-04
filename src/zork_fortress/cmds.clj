@@ -15,15 +15,15 @@
   [turn]
   (str "\n> " (:command turn) "\n\n" (:response turn) "\n"))
 
-(t/ann history-cmd [t2/Game & :optional {:args (t/Vec t/AnyInteger)} -> String])
+(t/ann history-cmd [t2/Game & :optional {:args (t/Vec String)} -> String])
 (defn history-cmd
   "The history command."
-  [game & {:keys [args] :or {args [4]}}]
+  [game & {:keys [args] :or {args ["4"]}}]
   (let [last-turn (when (and (not (nil? (:last-turn game)))
                              (not= true (:invalid (:last-turn game)))
                              (not= 'history (:command (:last-turn game))))
                     (:last-turn game))
-        total-to-show (or (get args 0) 4)
+        total-to-show (Integer/parseInt (or (get args 0) "4"))
         num-to-show-from-history (if (nil? last-turn)
                                     total-to-show
                                     (- total-to-show 1))
@@ -37,19 +37,24 @@
          (if show-last-turn (turn-history-string last-turn) "")
          "*** END HISTORY ***")))
 
-(t/ann run-cmd [t2/Game t/Symbol & :optional {:args (t/Vec t/AnyInteger)} -> t2/Game])
+(t/ann run-cmd [t2/Game t2/Command -> t2/Game])
 (defn run-cmd
   "Run the given command."
-  [game command & {:keys [args]}]
-  (merge game 
-         {:last-turn (merge {:command command}
-                             (condp = command
-                               'look {:response (look-cmd game)}
-                               'history {:response (if (nil? args) (history-cmd game) (history-cmd game :args args))}
-                               {:response "Invalid command." :invalid true}))
-          :turn-history (if (and (:last-turn game)
-                                 (not (:invalid (:last-turn game)))
-                                 (not (= 'history (:command (:last-turn game)))))
-                          (conj (:turn-history game) (:last-turn game))
-                          (:turn-history game))}))
+  [game cmd]
+  (let [command (:command cmd)
+        args (when (:args cmd) (:args cmd))]
+    (merge game 
+           {:last-turn (merge {:command command}
+                              (condp = command
+                                'look {:response (look-cmd game)}
+                                'history {:response (if (nil? args)
+                                                      (history-cmd game)
+                                                      (history-cmd game :args args))}
+                                {:response "Invalid command." :invalid true}))
+            :turn-history (if (and (:last-turn game)
+                                   (not (:invalid (:last-turn game)))
+                                   (not (= 'history (:command (:last-turn game)))))
+                            (conj (:turn-history game) (:last-turn game))
+                            (:turn-history game))})))
+
 

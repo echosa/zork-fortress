@@ -8,7 +8,7 @@
     (let [game (h/get-test-game)]
       (is (= nil (:last-turn game))
           (= {:command 'look :response "You see nothing."}
-             (:last-turn (run-cmd game 'look)))))))
+             (:last-turn (run-cmd game {:command 'look})))))))
 
 (deftest test-commands-should-set-history
   (testing "Look command should return message."
@@ -16,7 +16,7 @@
                                             :response "Previous command."})]
       (is (= [] (:turn-history game))
           (= [{:command 'prev :response "Previous command."}]
-             (:turn-history (run-cmd game 'look)))))))
+             (:turn-history (run-cmd game {:command 'look})))))))
 
 (deftest test-invalid-commands-are-marked-as-such
   (testing "Invalid command should respond as such."
@@ -24,7 +24,7 @@
       (is (= {:command 'foobar
               :response "Invalid command."
               :invalid true}
-              (:last-turn (run-cmd game 'foobar)))))))
+              (:last-turn (run-cmd game {:command 'foobar})))))))
 
 (deftest test-valid-commands-should-be-added-to-history
   (testing "Valid commands should be added to the command history."
@@ -35,7 +35,7 @@
           game (h/get-test-game :last-turn last-turn
                                 :turn-history turn-history)]
       (is (= (conj turn-history last-turn)
-             (:turn-history (run-cmd game 'look)))))))
+             (:turn-history (run-cmd game {:command 'look})))))))
 
 (deftest test-invalid-commands-should-not-be-added-to-history
   (testing "Valid commands should be added to the command history."
@@ -47,7 +47,7 @@
           game (h/get-test-game :last-turn last-turn
                                 :turn-history turn-history)]
       (is (= turn-history
-             (:turn-history (run-cmd game 'look)))))))
+             (:turn-history (run-cmd game {:command 'look})))))))
 
 
 (deftest test-history-command-should-default-to-4-items
@@ -82,7 +82,7 @@ Fourth message.
 
 Fifth message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game 'history))))))))
+             (:response (:last-turn (run-cmd game {:command 'history}))))))))
 
 
 (deftest test-history-command-with-less-than-4-should-display-less-than-4-items
@@ -109,7 +109,7 @@ Second message.
 
 Third message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game 'history))))))))
+             (:response (:last-turn (run-cmd game {:command 'history}))))))))
 
 (deftest test-history-command-should-not-be-added-to-history
   (testing "History command should not be added to the history."
@@ -146,7 +146,7 @@ Second message.
 
 Third message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game 'history))))))))
+             (:response (:last-turn (run-cmd game {:command 'history}))))))))
 
 (deftest test-history-command-should-display-last-turn-if-valid
   (testing "History command should display the last turn, if it was valid."
@@ -175,7 +175,7 @@ Third message.
 
 You see nothing.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game 'history))))))))
+             (:response (:last-turn (run-cmd game {:command 'history}))))))))
 
 (deftest test-history-command-should-limit-display-to-given-count
   (testing "History command should limit its display to the given count."
@@ -196,4 +196,4 @@ Third message.
 
 You see nothing.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game 'history :args [2]))))))))
+             (:response (:last-turn (run-cmd game {:command 'history :args ["2"]}))))))))

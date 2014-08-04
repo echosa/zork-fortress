@@ -40,8 +40,9 @@
   (flush)
   (let [user-input (or (read-line) "")]
     (when-not (= user-input "quit")
-      (let [command (symbol user-input)]
-        (game-loop (cmds/run-cmd game command))))))
+      (let [command (parse-input user-input)]
+        (when-not (nil? command)
+          (game-loop (cmds/run-cmd game command)))))))
 
 (t/ann get-new-game [-> t2/Game])
 (defn get-new-game
