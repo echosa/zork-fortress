@@ -1,13 +1,8 @@
 (ns zork-fortress.cmds
   (:require [clojure.core.typed :as t]
             [zork-fortress.types :as t2])
-  (:use [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]))
-
-(t/ann look-cmd [t2/Game -> String])
-(defn look-cmd
-  "The look command."
-  [game]
-  "You see nothing.")
+  (:use [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]
+        [zork-fortress.cmds.look :only [look-cmd]]))
 
 (t/ann get-new-last-turn [t2/Game t2/Command -> t2/Turn])
 (defn get-new-last-turn
