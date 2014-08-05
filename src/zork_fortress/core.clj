@@ -26,8 +26,8 @@
         args (subvec parsed-string 1)]
     (when (not (or (nil? command) (empty? command)))
       (if (empty? args)
-        {:command (symbol command)}
-        {:command (symbol command) :args args}))))
+        {:trigger (symbol command)}
+        {:trigger (symbol command) :args args}))))
 
 (t/ann game-loop [t2/Game -> t/Any])
 (defn game-loop

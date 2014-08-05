@@ -12,13 +12,13 @@
 (t/ann run-cmd [t2/Game t2/Command -> t2/Game])
 (defn run-cmd
   "Run the given command."
-  [game cmd]
-  (let [command (:command cmd)
-        args (when (:args cmd) (:args cmd))
+  [game command]
+  (let [trigger (:trigger command)
+        args (when (:args command) (:args command))
         last-turn-for-history (get-last-turn-for-history game)]
     (merge game 
            {:last-turn (merge {:command command}
-                              (condp = command
+                              (condp = trigger
                                 'look {:response (look-cmd game)}
                                 'history {:response (if (nil? args)
                                                       (history-cmd game)

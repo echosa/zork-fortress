@@ -7,7 +7,7 @@
 (defn turn-history-string
   "Return the history output for the turn."
   [turn]
-  (str "\n> " (:command turn) "\n\n" (:response turn) "\n"))
+  (str "\n> " (:trigger (:command turn)) "\n\n" (:response turn) "\n"))
 
 (t/ann get-turn-history [t2/Game t/AnyInteger -> String])
 (defn get-turn-history
@@ -25,7 +25,7 @@
   [game]
   (when (and (not (nil? (:last-turn game)))
              (not= true (:invalid (:last-turn game)))
-             (not= 'history (:command (:last-turn game))))
+             (not= 'history (:trigger (:command (:last-turn game)))))
     (:last-turn game)))
 
 (t/ann history-cmd [t2/Game & :optional {:args (t/Vec String)} -> String])

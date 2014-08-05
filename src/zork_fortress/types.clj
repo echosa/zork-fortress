@@ -7,12 +7,12 @@
 
 (t/defalias Command
   "A parsed command."
-  (t/HMap :mandatory {:command t/Symbol}
+  (t/HMap :mandatory {:trigger t/Symbol}
           :optional {:args (t/Vec String)}))
 
 (t/defalias Turn
   "A single player turn including command and response."
-  (t/HMap :mandatory {:command t/Symbol
+  (t/HMap :mandatory {:command Command
                       :response String}
           :optional {:invalid t/Bool}))
 
