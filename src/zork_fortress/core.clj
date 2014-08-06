@@ -48,11 +48,13 @@
 (defn get-new-game
   "Returns a new, initialized game."
   []
-  {:player {:name "Player"}
-   :world {:areas [{:name "Starting Area"
-                    :type "Plains"
-                    :trees [{:type "Oak" :log-count 10}]}]}
-   :turn-history []})
+  (let [area {:name "Starting Area"
+                    :type "plains"
+                    :trees [{:type "oak" :log-count 10}]}]
+    {:player {:name "Player"}
+     :world {:areas [area]}
+     :current-area area
+     :turn-history []}))
 
 (t/ann -main [t/Any -> t/Any])
 (defn -main

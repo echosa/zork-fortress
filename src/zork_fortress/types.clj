@@ -44,6 +44,7 @@
   "The game."
   (t/HMap :mandatory {:player Player
                       :world World
+                      :current-area Area
                       :turn-history (t/Vec (t/Option Turn))}
           :optional {:last-turn Turn}))
 
