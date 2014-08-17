@@ -6,6 +6,8 @@
 (defn look-cmd
   "The look command."
   [game]
-  (let [area (:current-area game)]
+  (let [area-id (:current-area game)
+        areas (:areas (:world game))
+        area (first (filterv (fn [item] (= (:id item) area-id)) areas))]
     (str (:name area) " [" (:type area) "]\n")))
 

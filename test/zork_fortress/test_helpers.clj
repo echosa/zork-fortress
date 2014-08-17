@@ -13,9 +13,10 @@
 (defn get-test-area
   "Returns a test area."
   []
-  {:name "First Area" 
+  {:id 1
+   :name "First Area" 
    :type "plains"
-   :trees [{:type "oak" :log-count 10}]})
+   :trees [{:id 1 :type "oak" :log-count 10}]})
 
 (t/ann get-test-world [-> t2/World])
 (defn get-test-world
@@ -31,7 +32,7 @@
   [& {:keys [last-turn turn-history]}]
   (let [game {:player (get-test-player)
               :world (get-test-world)
-              :current-area (get-test-area)
+              :current-area 1
               :turn-history []}
         game (if (nil? last-turn)
                 game

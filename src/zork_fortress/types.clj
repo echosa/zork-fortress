@@ -26,12 +26,14 @@
 
 (t/defalias Tree
   "This is a Tree structure holding type and log count."
-  (t/HMap :mandatory {:type String
-                      :log-count t/Num}))
+  (t/HMap :mandatory {:id t/Int
+                      :type String
+                      :log-count t/Int}))
 
 (t/defalias Area
   "An area of the world."
-  (t/HMap :mandatory {:name String
+  (t/HMap :mandatory {:id t/Int
+                      :name String
                       :type Biome}
           :optional {:rooms (t/Vec (t/Option Room))
                      :trees (t/Vec Tree)}))
@@ -44,7 +46,7 @@
   "The game."
   (t/HMap :mandatory {:player Player
                       :world World
-                      :current-area Area
+                      :current-area t/Int
                       :turn-history (t/Vec (t/Option Turn))}
           :optional {:last-turn Turn}))
 
