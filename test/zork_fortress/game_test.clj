@@ -15,3 +15,11 @@
       (is (= {"oak" 1}
              (g/get-current-area-tree-counts game))))))
 
+(deftest test-adding-tree
+  (testing "Correct tree should be added to the  correct area."
+    (let [game (h/get-test-game)
+          game (g/add-tree-to-area game 1 "oak" 5)]
+      (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
+                                   {:id 2 :type "oak" :log-count 5}]}]
+             (:trees (:area (:world game))))))))
+

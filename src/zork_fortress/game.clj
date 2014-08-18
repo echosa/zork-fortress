@@ -25,3 +25,15 @@
      (reduce tree-count-reduction
              {}
              trees)))
+
+(t/ann add-tree-to-area [t2/Game t/Int String t/Int -> t2/Game])
+(defn add-tree-to-area
+  "Returns the game with a tree added to the given area."
+  [game area-id tree-type log-count]
+  (let [updated-area {:id 1
+                      :name "First Area" 
+                      :type "plains"
+                      :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
+                                                   {:id 2 :type tree-type :log-count log-count}]}]}
+        updated-world (merge (:world game) {:area updated-area})]
+    (merge game {:world updated-world})))
