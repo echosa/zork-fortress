@@ -17,7 +17,7 @@
   [game]
   (get-area-from-game game (:current-area game)))
 
-(t/ann tree-count-reduction [(t/Map String t/Int) (t/HMap :mandatory {:type String :trees (t/Vec t2/Tree)}) -> (t/Map String t/Int)])
+(t/ann tree-count-reduction [(t/Map String t/Int) t2/TreeTypeColl -> (t/Map String t/Int)])
 (defn- tree-count-reduction
   "Used as part of (get-current-area-tree-counts)."
   [val next]
@@ -32,15 +32,54 @@
              {}
              trees)))
 
+(t/ann get-tree-type-from-area [t2/Game t/Int String -> (t/U zork-fortress.types/TreeTypeColl (t/HMap :mandatory {:trees (t/HVec []), :type (t/I (java.util.List zork-fortress.types/TreeTypeColl) (t/I clojure.core.typed/EmptyCount (t/I clojure.lang.IObj (t/I (java.util.Collection zork-fortress.types/TreeTypeColl) (t/I (Iterable zork-fortress.types/TreeTypeColl) (clojure.lang.IPersistentVector zork-fortress.types/TreeTypeColl))))))} :complete? true))])
+(defn get-tree-type-from-area
+  "Return the map for the given tree type from the given area."
+  [game area-id tree-type]
+  (let [area (get-area-from-game game area-id)
+        trees (:trees area)
+        tree-type (filterv (fn [item] (= (:type item) tree-type))
+                           trees)]
+    (if (and (not (nil? tree-type)) (not (empty? tree-type)))
+     (nth tree-type 0)
+     {:type tree-type :trees []})))
+
+(t/ann get-tree-types-from-area-without-type [t2/Game t/Int String -> (t/U nil (t/I clojure.lang.IObj (java.util.Collection zork-fortress.types/TreeTypeColl) (java.lang.Iterable zork-fortress.types/TreeTypeColl) (clojure.lang.IPersistentVector zork-fortress.types/TreeTypeColl) (java.util.List zork-fortress.types/TreeTypeColl)))])
+(defn get-tree-types-from-area-without-type
+  "Return the vector of tress for the given area without the given tree type."
+  [game area-id tree-type]
+  (let [area (get-area-from-game game area-id)
+        trees (:trees area)
+        tree-types (filterv (fn [item] (not= (:type item) tree-type))
+                            trees)]
+    (when (and (not (nil? tree-type)) (not (empty? tree-type)))
+     tree-types)))
+
+(t/ann get-next-tree-id [t2/Game t/Int String -> t/Int])
+(defn get-next-tree-id
+  "Returns the next tree id for the given area."
+  [game area-id tree-type]
+  (let [trees (:trees (get-tree-type-from-area game area-id tree-type))]
+    (if (empty? trees)
+      1
+      (+ 1 (:id (last trees))))))
+
 (t/ann add-tree-to-area [t2/Game t/Int String t/Int -> t2/Game])
 (defn add-tree-to-area
   "Returns the game with a tree added to the given area."
   [game area-id tree-type log-count]
-  (let [new-tree {:id 2 :type tree-type :log-count log-count}
+  (let [next-id (get-next-tree-id game area-id tree-type)
+        new-tree {:id next-id :type tree-type :log-count log-count}
+        existing-area (get-area-from-game game area-id)
+        existing-tree-map (get-tree-type-from-area game area-id tree-type)
+        existing-trees (:trees existing-tree-map)
+        updated-trees (conj existing-trees new-tree)
+        updated-tree-map {:type tree-type :trees updated-trees}
+        updated-tree-vector [updated-tree-map]
         updated-area {:id 1
                       :name "First Area" 
                       :type "plains"
-                      :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
-                                                   new-tree]}]}
+                      :trees (conj (or (get-tree-types-from-area-without-type game area-id tree-type) [])
+                                   updated-tree-map)}
         updated-world (merge (:world game) {:area updated-area})]
     (merge game {:world updated-world})))

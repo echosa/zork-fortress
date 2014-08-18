@@ -30,13 +30,17 @@
                       :type String
                       :log-count t/Int}))
 
+(t/defalias TreeTypeColl
+  "This is a collection of all Trees of a given type."
+  (t/HMap :mandatory {:type String :trees (t/Vec Tree)}))
+  
 (t/defalias Area
   "An area of the world."
   (t/HMap :mandatory {:id t/Int
                       :name String
                       :type Biome}
           :optional {:rooms (t/Vec (t/Option Room))
-                     :trees (t/Vec (t/HMap :mandatory {:type String :trees (t/Vec Tree)}))}))
+                     :trees (t/Vec TreeTypeColl)}))
 
 (t/defalias World
   "The world."

@@ -29,3 +29,33 @@
                                    {:id 2 :type "oak" :log-count 5}]}]
              (:trees (:area (:world game))))))))
 
+(deftest test-getting-tree-type
+  (testing "Correct tree type listing should be returned."
+    (let [game (h/get-test-game)]
+      (is (= {:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}
+             (g/get-tree-type-from-area game 1 "oak"))))))
+
+(deftest test-getting-next-tree-id
+  (testing "Correct id should be returned."
+    (let [game (h/get-test-game)]
+      (is (= 2 (g/get-next-tree-id game 1 "oak"))))))
+
+(deftest test-getting-next-tree-id-for-nonexisting-type
+  (testing "Correct id should be returned."
+    (let [game (h/get-test-game)]
+      (is (= 1 (g/get-next-tree-id game 1 "pine"))))))
+
+(deftest test-getting-tree-types-without-type
+  (testing "Should get tree type vector without given type."
+    (let [game (h/get-test-game)]
+      (is (= []
+             (g/get-tree-types-from-area-without-type game 1 "oak"))))))
+
+(deftest test-adding-different-tree-type
+  (testing "Correct tree should be added to the  correct area."
+    (let [game (h/get-test-game)
+          game (g/add-tree-to-area game 1 "pine" 5)]
+      (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}
+              {:type "pine" :trees [{:id 1 :type "pine" :log-count 5}]}]
+             (:trees (:area (:world game))))))))
+
