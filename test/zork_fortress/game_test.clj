@@ -9,6 +9,12 @@
       (is (= (h/get-test-area)
              (g/get-current-area game))))))
 
+(deftest test-getting-area-from-game
+  (testing "Getting area from game by ID should return correct area"
+    (let [game (h/get-test-game)]
+      (is (= (h/get-test-area)
+             (g/get-area-from-game game 1))))))
+
 (deftest test-getting-current-area-tree-counts
   (testing "Should get correct tree counts from game."
     (let [game (h/get-test-game)]
