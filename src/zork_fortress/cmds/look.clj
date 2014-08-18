@@ -1,13 +1,12 @@
 (ns zork-fortress.cmds.look
   (:require [clojure.core.typed :as t]
-            [zork-fortress.types :as t2]))
+            [zork-fortress.types :as t2]
+            [zork-fortress.game :as g]))
 
 (t/ann look-cmd [t2/Game -> String])
 (defn look-cmd
   "The look command."
   [game]
-  (let [area-id (:current-area game)
-        areas (:areas (:world game))
-        area (first (filterv (fn [item] (= (:id item) area-id)) areas))]
+  (let [area (g/get-current-area game)]
     (str (:name area) " [" (:type area) "]\n")))
 
