@@ -14,3 +14,9 @@
     (let [game (h/get-test-game)]
       (is (.contains (:response (:last-turn (run-cmd game {:trigger 'look})))
                      "plains")))))
+
+(deftest test-looking-should-print-tree-info
+  (testing "Look command should print tree information as part of its response."
+    (let [game (h/get-test-game)]
+      (is (.contains (:response (:last-turn (run-cmd game {:trigger 'look})))
+                     "You see 1 oak tree.")))))

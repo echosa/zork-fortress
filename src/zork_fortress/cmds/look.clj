@@ -8,5 +8,6 @@
   "The look command."
   [game]
   (let [area (g/get-current-area game)]
-    (str (:name area) " [" (:type area) "]\n")))
+    (str (:name area) " [" (:type area) "]\n\n"
+         "You see 1 oak tree.\n")))
 
