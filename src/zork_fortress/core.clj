@@ -51,8 +51,7 @@
   (let [area {:id 1
               :name "Starting Area"
               :type "plains"
-              :trees [{:id 1 :type "oak" :log-count 10}]}]
-
+              :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]}]
     {:player {:name "Player"}
      :world {:areas [area]}
      :current-area 1

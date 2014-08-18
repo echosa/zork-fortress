@@ -36,7 +36,7 @@
                       :name String
                       :type Biome}
           :optional {:rooms (t/Vec (t/Option Room))
-                     :trees (t/Vec Tree)}))
+                     :trees (t/Vec (t/HMap :mandatory {:type String :trees (t/Vec Tree)}))}))
 
 (t/defalias World
   "The world."

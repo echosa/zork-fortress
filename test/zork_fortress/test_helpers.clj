@@ -16,7 +16,7 @@
   {:id 1
    :name "First Area" 
    :type "plains"
-   :trees [{:id 1 :type "oak" :log-count 10}]})
+   :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]})
 
 (t/ann get-test-world [-> t2/World])
 (defn get-test-world
