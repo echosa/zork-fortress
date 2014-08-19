@@ -21,7 +21,7 @@
 (defn- tree-count-reduction
   "Used as part of (get-current-area-tree-counts)."
   [val next]
-  {(:type next) (count (:trees next))})
+  (merge val {(:type next) (count (:trees next))}))
 
 (t/ann get-current-area-tree-counts [t2/Game -> (t/Map String t/Int)])
 (defn get-current-area-tree-counts
@@ -81,5 +81,5 @@
                       :type "plains"
                       :trees (conj (or (get-tree-types-from-area-without-type game area-id tree-type) [])
                                    updated-tree-map)}
-        updated-world (merge (:world game) {:area updated-area})]
+        updated-world (merge (:world game) {:areas [updated-area]})]
     (merge game {:world updated-world})))

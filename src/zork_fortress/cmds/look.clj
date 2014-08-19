@@ -1,7 +1,17 @@
 (ns zork-fortress.cmds.look
   (:require [clojure.core.typed :as t]
             [zork-fortress.types :as t2]
-            [zork-fortress.game :as g]))
+            [zork-fortress.game :as g]
+            [clojure.string :as str]))
+
+(t/ann get-tree-info [t2/Game -> String])
+(defn get-tree-info
+  "Return a string with tree info for the area."
+  [game]
+  (let [tree-counts (g/get-current-area-tree-counts game)]
+    (str/join "\n" (for [[type count] tree-counts]
+                     (str "You see " count " " type 
+                          (if (= 1 count) " tree." " trees."))))))
 
 (t/ann look-cmd [t2/Game -> String])
 (defn look-cmd
@@ -9,5 +19,5 @@
   [game]
   (let [area (g/get-current-area game)]
     (str (:name area) " [" (:type area) "]\n\n"
-         "You see 1 oak tree.\n")))
+         (get-tree-info game))))
 

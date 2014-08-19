@@ -27,7 +27,7 @@
           game (g/add-tree-to-area game 1 "oak" 5)]
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
                                    {:id 2 :type "oak" :log-count 5}]}]
-             (:trees (:area (:world game))))))))
+             (:trees (g/get-area-from-game game 1)))))))
 
 (deftest test-getting-tree-type
   (testing "Correct tree type listing should be returned."
@@ -57,5 +57,25 @@
           game (g/add-tree-to-area game 1 "pine" 5)]
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}
               {:type "pine" :trees [{:id 1 :type "pine" :log-count 5}]}]
-             (:trees (:area (:world game))))))))
+             (:trees (g/get-area-from-game game 1)))))))
+
+(deftest test-adding-multiple-tree-types
+  (testing "Look command should print tree information as part of its response."
+    (let [game (h/get-test-game)
+          game (g/add-tree-to-area game 1 "oak" 5)
+          game (g/add-tree-to-area game 1 "pine" 5)]
+      (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
+                                   {:id 2 :type "oak" :log-count 5}]}
+              {:type "pine" :trees [{:id 1 :type "pine" :log-count 5}]}]
+             (:trees (g/get-area-from-game game 1)))))))
+
+(deftest test-getting-current-area-mutliple-tree-counts
+  (testing "Should get correct tree counts from game."
+    (let [game (h/get-test-game)
+          game (g/add-tree-to-area game 1 "oak" 5)
+          game (g/add-tree-to-area game 1 "pine" 5)
+          game (g/add-tree-to-area game 1 "cedar" 7)
+          game (g/add-tree-to-area game 1 "pine" 2)]
+      (is (= {"oak" 2 "pine" 2 "cedar" 1}
+             (g/get-current-area-tree-counts game))))))
 
