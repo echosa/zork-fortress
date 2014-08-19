@@ -9,7 +9,8 @@
   "Return a string with tree info for the area."
   [game]
   (let [tree-counts (g/get-current-area-tree-counts game)]
-    (str/join "\n" (for [[type count] tree-counts]
+    (str/join "\n" (t/for [[type count] :- '[String t/Int] tree-counts]
+                     :- String
                      (str "You see " count " " type 
                           (if (= 1 count) " tree." " trees."))))))
 
