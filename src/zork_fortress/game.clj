@@ -32,19 +32,19 @@
              {}
              trees)))
 
-(t/ann get-tree-type-from-area [t2/Game t/Int String -> (t/U zork-fortress.types/TreeTypeColl (t/HMap :mandatory {:trees (t/HVec []), :type (t/I (java.util.List zork-fortress.types/TreeTypeColl) (t/I clojure.core.typed/EmptyCount (t/I clojure.lang.IObj (t/I (java.util.Collection zork-fortress.types/TreeTypeColl) (t/I (Iterable zork-fortress.types/TreeTypeColl) (clojure.lang.IPersistentVector zork-fortress.types/TreeTypeColl))))))} :complete? true))])
+(t/ann get-tree-type-from-area [t2/Game t/Int String -> t2/TreeTypeColl])
 (defn get-tree-type-from-area
   "Return the map for the given tree type from the given area."
   [game area-id tree-type]
   (let [area (get-area-from-game game area-id)
         trees (:trees area)
-        tree-type (filterv (fn [item] (= (:type item) tree-type))
+        filtered-tree-type (filterv (fn [item] (= (:type item) tree-type))
                            trees)]
-    (if (and (not (nil? tree-type)) (not (empty? tree-type)))
-     (nth tree-type 0)
+    (if (and (not (nil? filtered-tree-type)) (not (empty? filtered-tree-type)))
+     (nth filtered-tree-type 0)
      {:type tree-type :trees []})))
 
-(t/ann get-tree-types-from-area-without-type [t2/Game t/Int String -> (t/U nil (t/I clojure.lang.IObj (java.util.Collection zork-fortress.types/TreeTypeColl) (java.lang.Iterable zork-fortress.types/TreeTypeColl) (clojure.lang.IPersistentVector zork-fortress.types/TreeTypeColl) (java.util.List zork-fortress.types/TreeTypeColl)))])
+(t/ann get-tree-types-from-area-without-type [t2/Game t/Int String -> (t/U nil (t/Vec t2/TreeTypeColl))])
 (defn get-tree-types-from-area-without-type
   "Return the vector of tress for the given area without the given tree type."
   [game area-id tree-type]
