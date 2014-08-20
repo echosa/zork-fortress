@@ -1,4 +1,4 @@
-(defproject zork-fortress "0.1.0-SNAPSHOT"
+(defproject zork-fortress "0.0.1"
   :description "A text world-building adventure!"
   :url "http://echosa.github.io"
   :license {:name "Eclipse Public License"
