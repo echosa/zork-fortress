@@ -1,7 +1,8 @@
 (ns zork-fortress.cmds
   (:require [clojure.core.typed :as t]
             [zork-fortress.types :as t2])
-  (:use [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]
+  (:use [zork-fortress.cmds.help :only [help-cmd]]
+        [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]
         [zork-fortress.cmds.look :only [look-cmd]]))
 
 (t/ann get-new-last-turn [t2/Game t2/Command -> t2/Turn])
@@ -11,10 +12,11 @@
   (let [args (when (:args command) (:args command))]
     (merge {:command command}
            (condp = (:trigger command)
-             'look {:response (look-cmd game)}
+             'help {:response (help-cmd)}
              'history {:response (if (nil? args)
                                    (history-cmd game)
                                    (history-cmd game :args args))}
+             'look {:response (look-cmd game)}
              {:response "Invalid command." :invalid true}))))
 
 (t/ann get-new-turn-history [t2/Game -> (t/Vec (t/Option t2/Turn))])
