@@ -6,7 +6,7 @@ Then I thought "what if?"
 
 Thus, Zork Fortress was born. A pet project with little direction, a vague goal, and a likely terrible idea.
 
-But, hey, you know, it's at least a reason for me to write some test-driven and [type-driven](http://typedclojure.org) Clojure, and I'm cool with that.
+But, hey, you know, it's at least a reason for me to write some test-driven and [type-driven](http://typedclojure.org) [Clojure](http://clojure.org), and I'm cool with that.
 
 ## Trying it out
 
@@ -14,6 +14,6 @@ The game is still very much in its infancy. There's really not much to it, but w
 
 ## Dev notes
 
-To run all the checks and tests, simply run `make` from the project's root directory. This will run `lein check`, `lein test`, and `lein typed check`. If you want coverage reports for the tests and typed checking, run `make coverage` instead.
+To run all the checks and tests, simply run `make` from the project's root directory. This will run `lein check`, `lein test`, and `lein typed check`. If you want coverage reports for the tests and type checking, run `make coverage` instead.
 
 The code itself may not be the best or most concise at times, but often I've gone for readability over cleverness. Also, I'm still fairly new to Clojure itself, so there's likely things I can do better or refactor to be cleaner. I am open to any and all suggestions in the form of polite and informative pull requests, which I reserve the right to completely ignore. Please so submit them, though, as this is very much a learning excersize for me and not just an entertaining hobby.
