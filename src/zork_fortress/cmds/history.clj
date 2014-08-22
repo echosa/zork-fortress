@@ -3,6 +3,9 @@
             [zork-fortress.types :as t2]
             [clojure.walk :as w]))
 
+(t/ann default-history-show-count t/Int)
+(def default-history-show-count 4)
+
 (t/ann turn-history-string [t2/Turn -> String])
 (defn turn-history-string
   "Return the history output for the turn."
@@ -31,9 +34,9 @@
 (t/ann history-cmd [t2/Game & :optional {:args (t/Vec String)} -> String])
 (defn history-cmd
   "The history command."
-  [game & {:keys [args] :or {args ["4"]}}]
+  [game & {:keys [args] :or {args [(str default-history-show-count)]}}]
   (let [valid-last-turn (get-last-turn-for-history game)
-        total-to-show (Integer/parseInt (or (get args 0) "4"))
+        total-to-show (Integer/parseInt (or (get args 0) (str default-history-show-count)))
         num-to-show-from-history (if (nil? valid-last-turn)
                                     total-to-show
                                     (- total-to-show 1))
