@@ -11,3 +11,9 @@
       (is (.contains (:response (:last-turn (run-cmd game {:trigger 'help})))
                      help/default-help)))))
 
+(deftest test-help-for-invalid-command-should-tell-user
+  (testing "Asking for help on an invalid command should tell the user as such."
+    (let [game (h/get-test-game)]
+      (is (.contains (:response (:last-turn (run-cmd game {:trigger 'help :args ["foobar"]})))
+                     help/invalid-command-msg)))))
+

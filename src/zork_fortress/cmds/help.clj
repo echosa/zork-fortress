@@ -5,8 +5,14 @@
 (def default-help 
   "Which command you like help on? Try \"help <command>\" or \"help commands\" to see a list of commands.")
 
-(t/ann help-cmd [-> String])
+(t/ann invalid-command-msg String)
+(def invalid-command-msg 
+  "No help for that topic.")
+
+(t/ann help-cmd [& :optional {:args (t/Vec String)} -> String])
 (defn help-cmd
   "Shows helpful information to the user."
-  []
-  default-help)
+  [& {:keys [args]}]
+  (if (= (first args) "foobar")
+    invalid-command-msg
+    default-help))

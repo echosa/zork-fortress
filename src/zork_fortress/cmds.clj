@@ -12,7 +12,9 @@
   (let [args (when (:args command) (:args command))]
     (merge {:command command}
            (condp = (:trigger command)
-             'help {:response (help-cmd)}
+             'help {:response (if (nil? args)
+                                   (help-cmd)
+                                   (help-cmd :args args))}
              'history {:response (if (nil? args)
                                    (history-cmd game)
                                    (history-cmd game :args args))}
