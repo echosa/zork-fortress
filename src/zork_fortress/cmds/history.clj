@@ -17,10 +17,10 @@
   "Return a string of the given number of recent turns."
   [game num-to-show]
   (str (w/walk (fn [a] {:pre [((t/pred t2/Turn) a)]} (turn-history-string a))   
-         (fn [a] {:pre [((t/pred (t/U nil (t/Coll t/Any))) a)]} (apply str a))
-         (if (< (count (:turn-history game)) num-to-show)
-           (:turn-history game)
-           (subvec (:turn-history game) (- (count (:turn-history game)) num-to-show))))))
+               (fn [a] {:pre [((t/pred (t/U nil (t/Coll t/Any))) a)]} (apply str a))
+               (if (< (count (:turn-history game)) num-to-show)
+                 (:turn-history game)
+                 (subvec (:turn-history game) (- (count (:turn-history game)) num-to-show))))))
 
 (t/ann get-last-turn-for-history [t2/Game -> (t/Option t2/Turn)])
 (defn get-last-turn-for-history

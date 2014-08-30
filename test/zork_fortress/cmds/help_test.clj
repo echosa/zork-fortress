@@ -24,3 +24,18 @@
       (is (.contains response "look"))
       (is (.contains response "help"))
       (is (.contains response "history")))))
+
+(deftest test-help-commands-should-not-include-test-namespaces
+  (testing "Running 'help commands' should not include test namespaces in its output."
+    (let [game (h/get-test-game)
+          response (:response (:last-turn (run-cmd game {:trigger 'help :args ["commands"]})))]
+      (is (.contains response "look"))
+      (is (.contains response "help"))
+      (is (.contains response "history")))))
+
+(deftest test-help-commands-should-be-alphabetical
+  (testing "Running 'help commands' should provide an alphabetical list."
+    (let [game (h/get-test-game)
+          response (:response (:last-turn (run-cmd game {:trigger 'help :args ["commands"]})))]
+      (is (< (.indexOf response "help") (.indexOf response "history")))
+      (is (< (.indexOf response "history") (.indexOf response "look"))))))
