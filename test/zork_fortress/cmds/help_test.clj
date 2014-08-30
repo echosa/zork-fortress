@@ -17,3 +17,10 @@
       (is (.contains (:response (:last-turn (run-cmd game {:trigger 'help :args ["foobar"]})))
                      help/invalid-command-msg)))))
 
+(deftest test-help-commands-should-provide-command-list
+  (testing "Running 'help commands' should provide a list of commands for which help is available."
+    (let [game (h/get-test-game)
+          response (:response (:last-turn (run-cmd game {:trigger 'help :args ["commands"]})))]
+      (is (.contains response "look"))
+      (is (.contains response "help"))
+      (is (.contains response "history")))))
