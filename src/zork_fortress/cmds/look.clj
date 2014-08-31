@@ -4,6 +4,10 @@
             [zork-fortress.game :as g]
             [clojure.string :as str]))
 
+(t/ann look-cmd-help String)
+(def look-cmd-help
+  "Use look to look around.")
+
 (t/ann get-tree-info [t2/Game -> String])
 (defn get-tree-info
   "Return a string with tree info for the area."

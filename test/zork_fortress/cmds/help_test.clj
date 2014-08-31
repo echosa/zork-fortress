@@ -39,3 +39,9 @@
           response (:response (:last-turn (run-cmd game {:trigger 'help :args ["commands"]})))]
       (is (< (.indexOf response "help") (.indexOf response "history")))
       (is (< (.indexOf response "history") (.indexOf response "look"))))))
+
+(deftest test-help-should-show-help-for-requested-command
+  (testing "Giving a command to 'help' should display its help info."
+    (let [game (h/get-test-game)]
+      (is (= zork-fortress.cmds.look/look-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["look"]})))))
+      (is (= zork-fortress.cmds.history/history-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["history"]}))))))))

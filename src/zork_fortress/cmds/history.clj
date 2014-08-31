@@ -6,6 +6,10 @@
 (t/ann default-history-show-count t/Int)
 (def default-history-show-count 4)
 
+(t/ann history-cmd-help String)
+(def history-cmd-help 
+  "The history command shows your last few moves.")
+
 (t/ann turn-history-string [t2/Turn -> String])
 (defn turn-history-string
   "Return the history output for the turn."

@@ -29,8 +29,17 @@
 (defn help-cmd
   "Shows helpful information to the user."
   [& {:keys [args]}]
-  (if (= (first args) "commands")
-    (available-commands-list)
-    (if (= (first args) "foobar")
-      invalid-command-msg
-      default-help)))
+  (if (empty? args)
+    default-help
+    (let [cmd (first args)]
+      (if (= cmd "commands")
+        (available-commands-list)
+        (let [cmd-ns (find-ns (symbol (str "zork-fortress.cmds." cmd)))]
+          (if (nil? cmd-ns)
+            invalid-command-msg
+            (let [help-msg (ns-resolve cmd-ns (symbol (str cmd "-cmd-help")))]
+              (if (nil? help-msg)
+                invalid-command-msg
+                (if (var? help-msg)
+                  (str (var-get help-msg))
+                  invalid-command-msg)))))))))
