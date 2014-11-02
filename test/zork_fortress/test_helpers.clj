@@ -9,14 +9,16 @@
   {:pre [(or (nil? name) (string? name))]}
   {:name (if (nil? name) "Player" name)})
 
-(t/ann get-test-area [-> t2/Area])
+(t/ann get-test-area [& :optional {:without-trees t/Bool} -> t2/Area])
 (defn get-test-area
   "Returns a test area."
-  []
-  {:id 1
-   :name "First Area" 
-   :type "plains"
-   :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]})
+  [& {:keys [without-trees]}]
+  (let [area {:id 1
+              :name "First Area" 
+              :type "plains"}]
+    (if without-trees
+      area
+      (merge area {:trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]}))))
 
 (t/ann get-test-world [-> t2/World])
 (defn get-test-world

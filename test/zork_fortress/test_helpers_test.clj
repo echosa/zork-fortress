@@ -22,6 +22,11 @@
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]
              (:trees area))))))
 
+(deftest test-test-area-without-trees
+  (testing "Getting an area without trees should have have no trees."
+    (let [area (h/get-test-area :without-trees true)]
+      (is (= nil (:trees area))))))
+
 (deftest test-default-test-world
   (testing "Getting a world should have expected default data."
     (let [area (h/get-test-area)
