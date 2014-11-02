@@ -22,8 +22,8 @@
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]
              (:trees area))))))
 
-(deftest test-test-area-without-trees
-  (testing "Getting an area without trees should have have no trees."
+(deftest test-area-without-trees
+  (testing "Getting an area without trees should have no trees."
     (let [area (h/get-test-area :without-trees true)]
       (is (= nil (:trees area))))))
 
@@ -32,6 +32,11 @@
     (let [area (h/get-test-area)
           world (h/get-test-world)]
       (is (= area (first (:areas world)))))))
+
+(deftest test-world-with-no-trees
+  (testing "Getting a world without trees should have no trees."
+    (let [world (h/get-test-world :without-trees true)]
+      (is (= nil (:trees (first (:areas world))))))))
 
 (deftest test-default-test-game
   (testing "Getting a game should have expected default data."
@@ -42,6 +47,11 @@
       (is (= world (:world game)))
       (is (= 1 (:current-area game)))
       (is (= [] (:turn-history game))))))
+
+(deftest test-game-with-no-trees
+  (testing "Getting a game without trees should have no trees."
+    (let [game (h/get-test-game :without-trees true)]
+      (is (= nil (:trees (first (:areas (:world game)))))))))
 
 (deftest test-game-with-last-turn
   (testing "Getting a game should have the given last turn."

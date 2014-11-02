@@ -20,20 +20,25 @@
       area
       (merge area {:trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]}))))
 
-(t/ann get-test-world [-> t2/World])
+(t/ann get-test-world [& :optional {:without-trees t/Bool} -> t2/World])
 (defn get-test-world
   "Returns a test world."
-  []
-  {:areas [(get-test-area)]})
+  [& {:keys [without-trees]}]
+  {:areas [(if without-trees
+             (get-test-area :without-trees without-trees)
+             (get-test-area))]})
 
-(t/ann get-test-game [& :optional {:last-turn t2/Turn
+(t/ann get-test-game [& :optional {:without-trees t/Bool
+                                   :last-turn t2/Turn
                                    :turn-history (t/Vec (t/Option t2/Turn))}
                       -> t2/Game])
 (defn get-test-game
   "Returns a test game."
-  [& {:keys [last-turn turn-history]}]
+  [& {:keys [without-trees last-turn turn-history]}]
   (let [game {:player (get-test-player)
-              :world (get-test-world)
+              :world (if without-trees
+                       (get-test-world :without-trees without-trees)
+                       (get-test-world))
               :current-area 1
               :turn-history []}
         game (if (nil? last-turn)
