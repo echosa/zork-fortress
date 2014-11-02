@@ -7,13 +7,19 @@
 (def no-trees-msg
   "There are no trees to chop.")
 
+(t/ann logs-received-msg [t/Int String -> String])
+(defn logs-received-msg
+  "Create a string showing the count and type of logs chopped."
+  [log-count log-type]
+  (str "Received " log-count " " log-type
+       (if (= 1 log-count) " log." " logs.")))
+
 (t/ann chop-cmd [t2/Game -> String])
 (defn chop-cmd
   "The chop command."
   [game]
-  no-trees-msg
-  ;; (let [area (g/get-current-area game)]
-  ;;   (str (:name area) " [" (:type area) "]\n\n"
-  ;;        (get-tree-info game)))
-)
+  (let [area (g/get-current-area game)]
+    (if (nil? (:trees area))
+      no-trees-msg
+      "Received 10 oak logs.")))
 
