@@ -3,7 +3,8 @@
             [zork-fortress.types :as t2])
   (:use [zork-fortress.cmds.help :only [help-cmd]]
         [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]
-        [zork-fortress.cmds.look :only [look-cmd]]))
+        [zork-fortress.cmds.look :only [look-cmd]]
+        [zork-fortress.cmds.chop :only [chop-cmd]]))
 
 (t/ann get-new-last-turn [t2/Game t2/Command -> t2/Turn])
 (defn get-new-last-turn
@@ -19,6 +20,7 @@
                                    (history-cmd game)
                                    (history-cmd game :args args))}
              'look {:response (look-cmd game)}
+             'chop {:response (chop-cmd game)}
              {:response "Invalid command." :invalid true}))))
 
 (t/ann get-new-turn-history [t2/Game -> (t/Vec (t/Option t2/Turn))])

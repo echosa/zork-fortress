@@ -6,7 +6,7 @@
 (defn get-area-from-game
   "Returns the area in the game with the given ID."
   [game area-id]
-  {:pre [(not (empty? (:areas (:world game))))]}
+  {:pre [(seq (:areas (:world game)))]}
   (nth (filterv (fn [item] (= (:id item) area-id))
                 (:areas (:world game)))
        0))
@@ -39,7 +39,7 @@
   (let [area (get-area-from-game game area-id)
         trees (:trees area)
         filtered-tree-type (filterv (fn [item] (= (:type item) tree-type))
-                           trees)]
+                                    trees)]
     (if (and (not (nil? filtered-tree-type)) (not (empty? filtered-tree-type)))
      (nth filtered-tree-type 0)
      {:type tree-type :trees []})))
