@@ -11,6 +11,7 @@
 (def invalid-command-msg 
   "No help for that topic.")
 
+;; TODO Add/improving help docs for commands
 (t/ann available-commands-list [-> String])
 (defn available-commands-list
   "Returns a list of command for which help is available."
@@ -22,7 +23,7 @@
                           (and (= -1 (.indexOf (str ns) "-test")) (not= -1 (.indexOf (str ns) ns-prefix)))) (all-ns)))]
     (str "Command list:\n\n"
          (w/walk (fn [ns] (str (subs (str ns) (count ns-prefix)) "\n"))
-                 (fn [s] {:pre [((t/pred (t/U nil (t/Coll t/Any))) s)]} (apply str s))
+                 (fn [s] {:pre [((t/pred (t/U nil (t/Coll t/Any))) s)]} (apply str (sort s)))
                  cmd-ns))))
 
 (t/ann help-cmd [& :optional {:args (t/Vec String)} -> String])

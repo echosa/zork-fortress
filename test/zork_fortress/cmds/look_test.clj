@@ -30,3 +30,11 @@
           response (:response (:last-turn (run-cmd game {:trigger 'look})))]
       (is (.contains response "You see 2 oak trees."))
       (is (.contains response "You see 1 pine tree.")))))
+
+(deftest test-zero-tree-count-should-not-display
+  (testing "Look command should not display tree counts of 0."
+    (let [game (h/get-test-game)
+          game (g/remove-tree-from-area game (g/get-current-area game) {:id 1 :type "oak" :log-count 10})]
+      (is (not (.contains (:response (:last-turn (run-cmd game {:trigger 'look})))
+                          "You see 0 oak trees."))))))
+

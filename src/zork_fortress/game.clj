@@ -55,9 +55,9 @@
     (when (and (not (nil? tree-type)) (not (empty? tree-type)))
      tree-types)))
 
-(t/ann get-next-tree-id [t2/Game t/Int String -> t/Int])
-(defn get-next-tree-id
-  "Returns the next tree id for the given area."
+(t/ann get-next-tree-id-to-add [t2/Game t/Int String -> t/Int])
+(defn get-next-tree-id-to-add
+  "Returns the next tree id to be added to the given area."
   [game area-id tree-type]
   (let [trees (:trees (get-tree-type-from-area game area-id tree-type))]
     (if (empty? trees)
@@ -68,7 +68,7 @@
 (defn add-tree-to-area
   "Returns the game with a tree added to the given area."
   [game area-id tree-type log-count]
-  (let [next-id (get-next-tree-id game area-id tree-type)
+  (let [next-id (get-next-tree-id-to-add game area-id tree-type)
         new-tree {:id next-id :type tree-type :log-count log-count}
         existing-area (get-area-from-game game area-id)
         existing-tree-map (get-tree-type-from-area game area-id tree-type)
@@ -76,10 +76,96 @@
         updated-trees (conj existing-trees new-tree)
         updated-tree-map {:type tree-type :trees updated-trees}
         updated-tree-vector [updated-tree-map]
-        updated-area {:id 1
-                      :name "First Area" 
-                      :type "plains"
+        updated-area {:id (:id existing-area)
+                      :name (:name existing-area)
+                      :type (:type existing-area)
                       :trees (conj (or (get-tree-types-from-area-without-type game area-id tree-type) [])
                                    updated-tree-map)}
         updated-world (merge (:world game) {:areas [updated-area]})]
     (merge game {:world updated-world})))
+
+(t/ann is-treetypecoll-of-type [t2/TreeTypeColl String -> t/Bool])
+(defn is-treetypecoll-of-type
+  "Returns true if the type of the given TreeTypeColl is the given type."
+  [tree-type-coll tree-type]
+  (= (:type tree-type-coll) tree-type))
+
+(t/ann filter-trees-of-type [(t/Vec t2/TreeTypeColl) String -> (t/Vec t2/TreeTypeColl)])
+(defn filter-trees-of-type
+  "Returns a collection of TreeTypeColl matching the given type."
+  [trees tree-type]
+  (filterv (t/fn [tree-type-coll :- t2/TreeTypeColl]
+             (is-treetypecoll-of-type tree-type-coll tree-type)
+             ;;(get-tree-type-from-treetypecoll tree-type-coll tree-type)
+             )
+           trees))
+
+(t/ann get-trees-with-type-from-area [t2/Area String -> (t/Option (t/Vec t2/Tree))])
+(defn get-trees-with-type-from-area
+  "Returns the trees with the give type from the given area."
+  [area tree-type]
+  (let [trees (:trees area)]
+    (when-not (nil? trees)
+      (let [first-filtered-tree-coll (first (filter-trees-of-type trees tree-type))]
+        (when-not (nil? first-filtered-tree-coll)
+          (:trees first-filtered-tree-coll))))))
+
+(t/ann tree-has-id [t2/Tree t/Int -> t/Bool])
+(defn tree-has-id
+  "Returns true if the tree has the given id."
+  [tree id]
+  (= (:id tree) id))
+
+(t/ann filter-trees-with-id [(t/Vec t2/Tree) t/Int -> (t/Vec t2/Tree)])
+(defn filter-trees-with-id
+  "Returns trees that match the given id."
+  [trees id]
+  (filterv (t/fn [tree :- t2/Tree]
+             (tree-has-id tree id))
+           trees))
+
+(t/ann area-has-tree-with-id [t2/Area String t/Int -> (t/Option t2/Tree)])
+(defn area-has-tree-with-id
+  "Returns the first tree with the given id if it exists in the area, nil otherwise."
+  [area tree-type tree-id]
+  (let [trees-of-type (get-trees-with-type-from-area area tree-type)]
+    (when-not (nil? trees-of-type)
+      (let [filtered-trees (filter-trees-with-id trees-of-type tree-id)]
+        (first filtered-trees)))))
+
+(t/ann get-next-tree-of-type [t2/Game t2/Area String -> (t/Option t2/Tree)])
+(defn get-next-tree-of-type
+  "Returns the next tree available for the given type, or nil if there are none."
+  [game area tree-type]
+  (let [area-tree-map (get-tree-type-from-area game (:id area) tree-type)]
+    (first (:trees area-tree-map))))
+
+(t/ann add-logs-to-inventory [t2/Game t2/Tree -> t2/Game])
+(defn add-logs-to-inventory
+  "Add logs to the player inventory."
+  [game tree]
+  (let [log-count (:log-count tree)
+        player-log-count (or (:count (assoc (:logs (:inventory (:player game))) :type "oak")) 0)
+        new-log-count (+ player-log-count log-count)]
+    (update-in game [:player :inventory :logs] assoc :count new-log-count)))
+
+(t/ann remove-tree-from-area [t2/Game t2/Area t2/Tree -> t2/Game])
+(defn remove-tree-from-area
+  "Returns the game with the given tree remove to the given area."
+  [game area tree]
+  (let [tree-type (:type tree)
+        tree-id (:id tree)
+        existing-tree-map (get-tree-type-from-area game (:id area) tree-type)
+        existing-trees (:trees existing-tree-map)
+        tree-to-remove (area-has-tree-with-id area tree-type tree-id)]
+    (if (nil? tree-to-remove)
+      game
+      (let [updated-trees (filterv (fn [tree-to-check] (not= (:id tree-to-check) tree-id)) existing-trees)
+            updated-tree-map {:type tree-type :trees updated-trees}
+            updated-area {:id (:id area)
+                          :name (:name area)
+                          :type (:type area)
+                          :trees (conj (or (get-tree-types-from-area-without-type game (:id area) tree-type) [])
+                                       updated-tree-map)}
+            updated-world (merge (:world game) {:areas [updated-area]})]
+        (merge game {:world updated-world})))))

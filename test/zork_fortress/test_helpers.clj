@@ -7,7 +7,8 @@
   "Returns a test player."
   [& {:keys [name]}]
   {:pre [(or (nil? name) (string? name))]}
-  {:name (if (nil? name) "Player" name)})
+  {:name (if (nil? name) "Player" name)
+   :inventory {}})
 
 (t/ann get-test-area [& :optional {:without-trees t/Bool} -> t2/Area])
 (defn get-test-area

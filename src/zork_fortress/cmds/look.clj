@@ -14,15 +14,17 @@
   [game]
   (let [tree-counts (g/get-current-area-tree-counts game)]
     (str/join "\n" (t/for [[type count] :- '[String t/Int] tree-counts]
-                     :- String
-                     (str "You see " count " " type 
-                          (if (= 1 count) " tree." " trees."))))))
+                     :- (t/Option String)
+                     (when (not= 0 count)
+                       (str "You see " count " " type 
+                            (if (= 1 count) " tree." " trees.")))))))
 
 (t/ann look-cmd [t2/Game -> String])
 (defn look-cmd
   "The look command."
   [game]
   (let [area (g/get-current-area game)]
-    (str (:name area) " [" (:type area) "]\n\n"
-         (get-tree-info game))))
+    (str/trim
+     (str (:name area) " [" (:type area) "]\n\n"
+          (get-tree-info game)))))
 

@@ -1,9 +1,15 @@
 (ns zork-fortress.types
   (:require [clojure.core.typed :as t]))
 
+(t/defalias PlayerInventory
+  "The player's inventory."
+  (t/HMap :optional {:logs (t/HMap :mandatory {:type String
+                                               :count t/Int})}))
+
 (t/defalias Player
   "The player."
-  (t/HMap :mandatory {:name String}))
+  (t/HMap :mandatory {:name String
+                      :inventory PlayerInventory}))
 
 (t/defalias Command
   "A parsed command."
@@ -54,4 +60,5 @@
                       :turn-history (t/Vec (t/Option Turn))}
           :optional {:last-turn Turn}))
 
-(t/ann clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
+(t/ann ^:no-check clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
+(t/ann ^:no-check clojure.core/update-in [Game t/Any t/Any t/Any t/Any -> Game])

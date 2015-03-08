@@ -22,7 +22,7 @@
              (g/get-current-area-tree-counts game))))))
 
 (deftest test-adding-tree
-  (testing "Correct tree should be added to the  correct area."
+  (testing "Correct tree should be added to the correct area."
     (let [game (h/get-test-game)
           game (g/add-tree-to-area game 1 "oak" 5)]
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}
@@ -38,12 +38,12 @@
 (deftest test-getting-next-tree-id
   (testing "Correct id should be returned."
     (let [game (h/get-test-game)]
-      (is (= 2 (g/get-next-tree-id game 1 "oak"))))))
+      (is (= 2 (g/get-next-tree-id-to-add game 1 "oak"))))))
 
 (deftest test-getting-next-tree-id-for-nonexisting-type
   (testing "Correct id should be returned."
     (let [game (h/get-test-game)]
-      (is (= 1 (g/get-next-tree-id game 1 "pine"))))))
+      (is (= 1 (g/get-next-tree-id-to-add game 1 "pine"))))))
 
 (deftest test-getting-tree-types-without-type
   (testing "Should get tree type vector without given type."
@@ -52,7 +52,7 @@
              (g/get-tree-types-from-area-without-type game 1 "oak"))))))
 
 (deftest test-adding-different-tree-type
-  (testing "Correct tree should be added to the  correct area."
+  (testing "Correct tree should be added to the correct area."
     (let [game (h/get-test-game)
           game (g/add-tree-to-area game 1 "pine" 5)]
       (is (= [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}
@@ -79,3 +79,28 @@
       (is (= {"oak" 2 "pine" 2 "cedar" 1}
              (g/get-current-area-tree-counts game))))))
 
+(deftest test-area-contains-tree-with-id
+  (testing "Should return id of the existing tree."
+    (let [area (h/get-test-area)]
+      (is (= {:id 1 :type "oak" :log-count 10}
+             (g/area-has-tree-with-id area "oak" 1))))))
+
+(deftest test-area-does-not-contain-tree-with-id
+  (testing "Should return nil if tree-id doesn't exist."
+    (let [area (h/get-test-area)]
+      (is (= nil (g/area-has-tree-with-id area "oak" 0))))))
+
+(deftest test-getting-next-tree-of-type
+  (testing "Should return the next tree available for the type."
+    (let [game (h/get-test-game)
+          area (g/get-area-from-game game 1)
+          tree-type "oak"]
+      (is (= {:id 1 :type tree-type :log-count 10}
+             (g/get-next-tree-of-type game area tree-type))))))
+
+(deftest test-removing-tree
+  (testing "Correct tree should be removed from the correct area."
+    (let [game (h/get-test-game)
+          game (g/remove-tree-from-area game (g/get-current-area game) {:id 1 :type "oak"})]
+      (is (= nil (g/area-has-tree-with-id (g/get-current-area game) "oak" 1)))
+      (is (= [] (g/get-trees-with-type-from-area (g/get-current-area game) "oak"))))))

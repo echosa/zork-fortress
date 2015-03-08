@@ -52,12 +52,12 @@
               :name "Starting Area"
               :type "plains"
               :trees [{:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}]}]
-    {:player {:name "Player"}
+    {:player {:name "Player" :inventory {}}
      :world {:areas [area]}
      :current-area 1
      :turn-history []}))
 
-(t/ann -main [t/Any -> t/Any])
+(t/ann -main [& :optional {:args t/Any} -> t/Any])
 (defn -main
   "Main entry point to start the game and get into the game loop."
   [& args]
