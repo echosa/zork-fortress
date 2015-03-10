@@ -35,6 +35,13 @@
     (let [game (run-cmd (h/get-test-game) {:trigger 'chop :args ["oak"]})]
       (is (= 10 (:count (assoc (:logs (:inventory (:player game))) :type "oak")))))))
 
+(deftest test-chopping-tree-should-add-logs-to-inventory
+  (testing "Chopping a tree should add the logs to your inventory."
+    (let [game (h/get-test-game)
+          game (g/add-tree-to-area game 1 "pine" 1)
+          game (run-cmd game {:trigger 'chop :args ["pine"]})]
+      (is (= 1 (g/get-inventory-log-count game "pine"))))))
+
 (deftest test-chopping-tree-should-remove-logs-from-area
   (testing "Chopping a tree should remove the logs from the area."
     (let [game (run-cmd (h/get-test-game) {:trigger 'chop :args ["oak"]})

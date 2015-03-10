@@ -4,6 +4,7 @@
   (:use [zork-fortress.cmds.help :only [help-cmd]]
         [zork-fortress.cmds.history :only [history-cmd get-last-turn-for-history]]
         [zork-fortress.cmds.look :only [look-cmd]]
+        [zork-fortress.cmds.inventory :only [inventory-cmd]]
         [zork-fortress.cmds.chop :only [chop-cmd chop-cmd-effects]]))
 
 (t/ann get-new-last-turn [t2/Game t2/Command -> t2/Turn])
@@ -23,6 +24,7 @@
              'chop {:response (if (nil? args)
                                 (chop-cmd game)
                                 (chop-cmd game :args args))}
+             'inventory {:response (inventory-cmd game)}
              {:response "Invalid command." :invalid true}))))
 
 (t/ann get-new-turn-history [t2/Game -> (t/Vec (t/Option t2/Turn))])

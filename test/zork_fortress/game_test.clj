@@ -104,3 +104,18 @@
           game (g/remove-tree-from-area game (g/get-current-area game) {:id 1 :type "oak"})]
       (is (= nil (g/area-has-tree-with-id (g/get-current-area game) "oak" 1)))
       (is (= [] (g/get-trees-with-type-from-area (g/get-current-area game) "oak"))))))
+
+(deftest test-adding-multiple-logs-to-inventory
+  (testing "Player should have both types of logs in inventory."
+    (let [game (h/get-test-game)
+          game (g/add-logs-to-inventory game {:id 1 :type "pine" :log-count 5})
+          game (g/add-logs-to-inventory game {:id 1 :type "oak" :log-count 2})]
+      (is (= 5 (g/get-inventory-log-count game "pine")))
+      (is (= 2 (g/get-inventory-log-count game "oak"))))))
+
+(deftest test-adding-multiple-of-the-same-log-type-to-inventory
+  (testing "Player should have the correct number of logs in inventory."
+    (let [game (h/get-test-game)
+          game (g/add-logs-to-inventory game {:id 1 :type "oak" :log-count 5})
+          game (g/add-logs-to-inventory game {:id 2 :type "oak" :log-count 2})]
+      (is (= 7 (g/get-inventory-log-count game "oak"))))))

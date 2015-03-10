@@ -1,10 +1,14 @@
 (ns zork-fortress.types
   (:require [clojure.core.typed :as t]))
 
+(t/defalias InventoryLogTypeMap (t/HMap :mandatory {:type String
+                                                    :count t/Int}))
+
+(t/defalias InventoryLogs (t/Vec InventoryLogTypeMap))
+
 (t/defalias PlayerInventory
   "The player's inventory."
-  (t/HMap :optional {:logs (t/HMap :mandatory {:type String
-                                               :count t/Int})}))
+  (t/HMap :optional {:logs InventoryLogs}))
 
 (t/defalias Player
   "The player."
@@ -61,4 +65,25 @@
           :optional {:last-turn Turn}))
 
 (t/ann ^:no-check clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
-(t/ann ^:no-check clojure.core/update-in [Game t/Any t/Any t/Any t/Any -> Game])
+
+(defmacro assoc-in*
+  "Associates a value in a nested associative structure, where ks is a
+  sequence of keys and v is the new value and returns a new nested structure.
+  If any levels do not exist, hash-maps will be created."
+  {:added "1.0"
+   :static true}
+  [m [k & ks] v]
+  (if ks
+    `(let [m# ~m k# ~k] (assoc m# k# (assoc-in* (get m# k#) ~ks ~v)))
+    `(assoc ~m ~k ~v))) 
+
+(defmacro update-in*
+  "'Updates' a value in a nested associative structure, where ks is a
+  sequence of keys and f is a function that will take the old value
+  and any supplied args and return the new value, and returns a new
+  nested structure. If any levels do not exist, hash-maps will be
+  created."
+  ([m [k & ks] f & args]
+   (if ks
+     `(let [m# ~m k# ~k] (assoc m# k# (update-in* (get m# k#) ~ks ~f ~@args)))
+     `(let [m# ~m k# ~k] (assoc m# k# (~f (get m# k#) ~@args)))))) 
