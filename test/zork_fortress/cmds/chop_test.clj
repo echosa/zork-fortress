@@ -2,6 +2,8 @@
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
+            [zork-fortress.area :as a]
+            [zork-fortress.inventory :as inv]
             [zork-fortress.cmds.chop :as chop])
   (:use [zork-fortress.cmds :only [run-cmd]]))
 
@@ -20,7 +22,7 @@
 (deftest test-chopping-tree-with-single-log-should-display-singular-log-count
   (testing "Chopping a tree should show the number of logs gotten from the tree."
     (let [game (h/get-test-game)
-          game (g/add-tree-to-area game 1 "pine" 1)]
+          game (a/add-tree-to-area game 1 "pine" 1)]
       (is (= "Received 1 pine log."
              (:response (:last-turn (run-cmd game {:trigger 'chop :args ["pine"]}))))))))
 
@@ -38,22 +40,22 @@
 (deftest test-chopping-tree-should-add-logs-to-inventory
   (testing "Chopping a tree should add the logs to your inventory."
     (let [game (h/get-test-game)
-          game (g/add-tree-to-area game 1 "pine" 1)
+          game (a/add-tree-to-area game 1 "pine" 1)
           game (run-cmd game {:trigger 'chop :args ["pine"]})]
-      (is (= 1 (g/get-inventory-log-count game "pine"))))))
+      (is (= 1 (inv/get-inventory-log-count game "pine"))))))
 
 (deftest test-chopping-tree-should-remove-logs-from-area
   (testing "Chopping a tree should remove the logs from the area."
     (let [game (run-cmd (h/get-test-game) {:trigger 'chop :args ["oak"]})
           area (g/get-current-area game)]
-      (is (empty? (:trees (g/get-tree-type-from-area game (:id area) "oak"))))
-      (is (nil? (g/area-has-tree-with-id area "oak" 1))))))
+      (is (empty? (:trees (a/get-tree-type-from-area game (:id area) "oak"))))
+      (is (nil? (a/area-has-tree-with-id area "oak" 1))))))
 
 (deftest test-chopping-tree-should-only-chop-one-tree
   (testing "Chopping a tree should only chop one tree."
     (let [game (h/get-test-game)
-          game (g/add-tree-to-area game 1 "oak" 5)
+          game (a/add-tree-to-area game 1 "oak" 5)
           game (run-cmd game {:trigger 'chop :args ["oak"]})]
       (is (= [{:id 2 :type "oak" :log-count 5}]
-             (g/get-trees-with-type-from-area (g/get-current-area game) "oak")))
-      (is (nil? (g/area-has-tree-with-id (g/get-current-area game) "oak" 1))))))
+             (a/get-trees-with-type-from-area (g/get-current-area game) "oak")))
+      (is (nil? (a/area-has-tree-with-id (g/get-current-area game) "oak" 1))))))

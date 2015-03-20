@@ -17,8 +17,8 @@
 
 (t/defalias Command
   "A parsed command."
-  (t/HMap :mandatory {:trigger t/Symbol}
-          :optional {:args (t/Vec String)}))
+  (t/HMap :mandatory {:trigger t/Symbol
+                      :args (t/Vec String)}))
 
 (t/defalias Turn
   "A single player turn including command and response."
@@ -30,40 +30,46 @@
   "A room in an area of the world."
   (t/HMap :mandatory {:name String}))
 
-(t/defalias Biome
-  "This is just an alias for String, to hold a biome name."
-  String)
-
 (t/defalias Tree
   "This is a Tree structure holding type and log count."
   (t/HMap :mandatory {:id t/Int
                       :type String
                       :log-count t/Int}))
 
-(t/defalias TreeTypeColl
+(t/defalias TreeColl
+  "This is a collection of Trees."
+  (t/Vec Tree))
+
+(t/defalias TreeTypeGroup
   "This is a collection of all Trees of a given type."
-  (t/HMap :mandatory {:type String :trees (t/Vec Tree)}))
+  (t/HMap :mandatory {:type String
+                      :trees TreeColl}))
   
 (t/defalias Area
   "An area of the world."
   (t/HMap :mandatory {:id t/Int
                       :name String
-                      :type Biome}
+                      :type String}
           :optional {:rooms (t/Vec (t/Option Room))
-                     :trees (t/Vec TreeTypeColl)}))
+                     :trees (t/Vec TreeTypeGroup)}))
 
 (t/defalias World
   "The world."
   (t/HMap :mandatory {:areas (t/Vec Area)}))
+
+(t/defalias TurnHistory
+  "A history of turns the player has taken."
+  (t/Vec (t/Option Turn)))
 
 (t/defalias Game
   "The game."
   (t/HMap :mandatory {:player Player
                       :world World
                       :current-area t/Int
-                      :turn-history (t/Vec (t/Option Turn))}
+                      :turn-history TurnHistory}
           :optional {:last-turn Turn}))
 
+(t/ann ^:no-check clojure.core/some? [t/Any -> t/Bool])
 (t/ann ^:no-check clojure.walk/walk [[t/Any -> t/Any] [t/Any -> t/Any] t/Any -> t/Any])
 
 (defmacro assoc-in*

@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
+            [zork-fortress.area :as a]
             [zork-fortress.cmds.inventory :as inv])
   (:use [zork-fortress.cmds :only [run-cmd]]))
 
@@ -20,7 +21,7 @@
 (deftest test-inventory-should-print-correct-multiple-types-of-logs
   (testing "Showing inventory should show correct log count with multiple types."
     (let [game (h/get-test-game)
-          game (g/add-tree-to-area game 1 "pine" 1)
+          game (a/add-tree-to-area game 1 "pine" 1)
           game (run-cmd game {:trigger 'chop :args ["oak"]})
           game (run-cmd game {:trigger 'chop :args ["pine"]})
           last-turn-response (:response (:last-turn (run-cmd game {:trigger 'inventory})))]

@@ -1,7 +1,8 @@
 (ns zork-fortress.cmds.look-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
-            [zork-fortress.game :as g])
+            [zork-fortress.game :as g]
+            [zork-fortress.area :as a])
   (:use [zork-fortress.cmds :only [run-cmd]]))
 
 (deftest test-looking-should-print-area-name
@@ -25,8 +26,8 @@
 (deftest test-looking-should-print-multiple-tree-info
   (testing "Look command should print tree information as part of its response."
     (let [game (h/get-test-game)
-          game (g/add-tree-to-area game 1 "oak" 5)
-          game (g/add-tree-to-area game 1 "pine" 5)
+          game (a/add-tree-to-area game 1 "oak" 5)
+          game (a/add-tree-to-area game 1 "pine" 5)
           response (:response (:last-turn (run-cmd game {:trigger 'look})))]
       (is (.contains response "You see 2 oak trees."))
       (is (.contains response "You see 1 pine tree.")))))
@@ -34,7 +35,7 @@
 (deftest test-zero-tree-count-should-not-display
   (testing "Look command should not display tree counts of 0."
     (let [game (h/get-test-game)
-          game (g/remove-tree-from-area game (g/get-current-area game) {:id 1 :type "oak" :log-count 10})]
+          game (a/remove-tree-from-area game (g/get-current-area game) {:id 1 :type "oak" :log-count 10})]
       (is (not (.contains (:response (:last-turn (run-cmd game {:trigger 'look})))
                           "You see 0 oak trees."))))))
 

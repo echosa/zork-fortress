@@ -23,8 +23,7 @@
 (defn inventory-cmd
   "The inventory command."
   [game]
-  (let [area (g/get-current-area game)
-        inv (p/get-player-inventory game)]
+  (let [inv (p/get-player-inventory game)]
     (if (empty? inv)
       empty-inventory-msg
       (get-log-counts inv))))

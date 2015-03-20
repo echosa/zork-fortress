@@ -26,10 +26,10 @@
                  (fn [s] {:pre [((t/pred (t/U nil (t/Coll t/Any))) s)]} (apply str (sort s)))
                  cmd-ns))))
 
-(t/ann help-cmd [& :optional {:args (t/Vec String)} -> String])
+(t/ann help-cmd [(t/Vec String) -> String])
 (defn help-cmd
   "Shows helpful information to the user."
-  [& {:keys [args]}]
+  [args]
   (if (empty? args)
     default-help
     (let [cmd (first args)]
