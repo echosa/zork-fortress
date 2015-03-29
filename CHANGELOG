@@ -1,0 +1,11 @@
+2015-03-20 Version 0.0.2
+
+	* Implemented `help` command.
+	* Implemented `chop` command.
+	* Implemented `inventory` command.
+	* Reformatted the `history` command output.
+
+2014-08-20 Version 0.0.1
+
+	* Implemented `look` command.
+	* Implemented `history` command.
