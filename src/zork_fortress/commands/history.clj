@@ -1,4 +1,4 @@
-(ns zork-fortress.cmds.history
+(ns zork-fortress.commands.history
   (:require [clojure.string :as str]
             [clojure.walk :as w]))
 

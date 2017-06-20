@@ -1,11 +1,11 @@
-(ns zork-fortress.cmds.chop-test
+(ns zork-fortress.commands.chop-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
             [zork-fortress.area :as a]
             [zork-fortress.inventory :as inv]
-            [zork-fortress.cmds.chop :as chop])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+            [zork-fortress.commands.chop :as chop])
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-chopping-with-no-trees-should-display-an-error-msg
   (testing "Trying to chop trees where there are none should show an error message."

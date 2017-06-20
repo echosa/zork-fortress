@@ -1,7 +1,7 @@
-(ns zork-fortress.cmds.history-test
+(ns zork-fortress.commands.history-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-valid-commands-should-be-added-to-history
   (testing "Valid commands should be added to the command history."

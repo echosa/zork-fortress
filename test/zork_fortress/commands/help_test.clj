@@ -1,9 +1,9 @@
-(ns zork-fortress.cmds.help-test
+(ns zork-fortress.commands.help-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
-            [zork-fortress.cmds.help :as help])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+            [zork-fortress.commands.help :as help])
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-default-help-should-prompt-for-command
   (testing "Typing 'help' without an argument should prompt for argument."
@@ -43,5 +43,5 @@
 (deftest test-help-should-show-help-for-requested-command
   (testing "Giving a command to 'help' should display its help info."
     (let [game (h/get-test-game)]
-      (is (= zork-fortress.cmds.look/look-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["look"]})))))
-      (is (= zork-fortress.cmds.history/history-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["history"]}))))))))
+      (is (= zork-fortress.commands.look/look-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["look"]})))))
+      (is (= zork-fortress.commands.history/history-cmd-help (:response (:last-turn (run-cmd game {:trigger 'help :args ["history"]}))))))))

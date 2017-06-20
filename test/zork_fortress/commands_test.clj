@@ -1,7 +1,7 @@
-(ns zork-fortress.cmds-test
+(ns zork-fortress.commands-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-commands-should-set-last-turn
   (testing "Look command should return message."

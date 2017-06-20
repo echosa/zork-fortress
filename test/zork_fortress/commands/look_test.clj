@@ -1,9 +1,9 @@
-(ns zork-fortress.cmds.look-test
+(ns zork-fortress.commands.look-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
             [zork-fortress.area :as a])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-looking-should-print-area-name
   (testing "Look command should print the area name as part of its response."

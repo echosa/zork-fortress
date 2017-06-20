@@ -1,7 +1,7 @@
 (ns zork-fortress.ui
   (:require [clojure.string :as str]
             [zork-fortress.player :as p]
-            [zork-fortress.cmds :as cmds]))
+            [zork-fortress.commands :as cmds]))
 
 (defn welcome-message
   "Print a welcome message for the user."

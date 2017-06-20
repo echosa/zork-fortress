@@ -1,4 +1,4 @@
-(ns zork-fortress.cmds.chop
+(ns zork-fortress.commands.chop
   (:require [zork-fortress.game :as g]
             [zork-fortress.area :as a]
             [zork-fortress.inventory :as inv]))

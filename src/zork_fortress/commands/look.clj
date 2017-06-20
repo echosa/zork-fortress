@@ -1,4 +1,4 @@
-(ns zork-fortress.cmds.look
+(ns zork-fortress.commands.look
   (:require [zork-fortress.game :as g]
             [clojure.string :as str]))
 

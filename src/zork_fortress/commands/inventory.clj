@@ -1,4 +1,4 @@
-(ns zork-fortress.cmds.inventory
+(ns zork-fortress.commands.inventory
   (:require [zork-fortress.game :as g]
             [zork-fortress.inventory :as i]
             [clojure.string :as str]))

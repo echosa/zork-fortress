@@ -1,9 +1,9 @@
-(ns zork-fortress.cmds
-  (:use [zork-fortress.cmds.help :only [help-cmd]]
-        [zork-fortress.cmds.history :only [history-cmd show-turn-in-history]]
-        [zork-fortress.cmds.look :only [look-cmd]]
-        [zork-fortress.cmds.inventory :only [inventory-cmd]]
-        [zork-fortress.cmds.chop :only [chop-cmd chop-cmd-effects]]))
+(ns zork-fortress.commands
+  (:use [zork-fortress.commands.help :only [help-cmd]]
+        [zork-fortress.commands.history :only [history-cmd show-turn-in-history]]
+        [zork-fortress.commands.look :only [look-cmd]]
+        [zork-fortress.commands.inventory :only [inventory-cmd]]
+        [zork-fortress.commands.chop :only [chop-cmd chop-cmd-effects]]))
 
 (defn get-new-last-turn
   "Generate a new last turn entry for the game."

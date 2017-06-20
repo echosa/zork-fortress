@@ -1,10 +1,10 @@
-(ns zork-fortress.cmds.inventory-test
+(ns zork-fortress.commands.inventory-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h]
             [zork-fortress.game :as g]
             [zork-fortress.area :as a]
-            [zork-fortress.cmds.inventory :as inv])
-  (:use [zork-fortress.cmds :only [run-cmd]]))
+            [zork-fortress.commands.inventory :as inv])
+  (:use [zork-fortress.commands :only [run-cmd]]))
 
 (deftest test-empty-inventory-should-print-correct-msg
   (testing "Trying to inventory trees where there are none should show an error message."

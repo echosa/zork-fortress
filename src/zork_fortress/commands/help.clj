@@ -1,4 +1,4 @@
-(ns zork-fortress.cmds.help
+(ns zork-fortress.commands.help
   (:require [clojure.walk :as w])
   (:import [clojure.lang Namespace]))
 
@@ -12,7 +12,7 @@
 (defn available-commands-list
   "Returns a list of command for which help is available."
   []
-  (let [ns-prefix "zork-fortress.cmds."
+  (let [ns-prefix "zork-fortress.commands."
         cmd-ns (sort
                 (comparator (fn [ns1 ns2] (compare (str ns1) (str ns2))))
                 (filter (fn [ns]
@@ -30,7 +30,7 @@
     (let [cmd (first args)]
       (if (= cmd "commands")
         (available-commands-list)
-        (let [cmd-ns (find-ns (symbol (str "zork-fortress.cmds." cmd)))]
+        (let [cmd-ns (find-ns (symbol (str "zork-fortress.commands." cmd)))]
           (if (nil? cmd-ns)
             invalid-command-msg
             (let [help-msg (ns-resolve cmd-ns (symbol (str cmd "-cmd-help")))]
