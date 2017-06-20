@@ -3,13 +3,9 @@
   :url "http://echosa.github.io"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/core.typed "0.2.82"]]
-  :plugins [[lein-cloverage "1.0.2"]
-            [lein-typed "0.3.5"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :plugins [[lein-cloverage "1.0.9"]]
   :repositories {"sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"}
-  :core.typed {:check [zork-fortress.core
-                       zork-fortress.test-helpers]}
   :main ^:skip-aot zork-fortress.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
