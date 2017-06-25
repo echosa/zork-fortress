@@ -1,5 +1,6 @@
 (ns zork-fortress.area
-  (:require [zork-fortress.tree :as tree]))
+  (:require [zork-fortress.tree :as tree]
+            [clojure.walk :as w]))
 
 (defn get-area-from-game
   "Returns the area in the game with the given ID."
@@ -94,3 +95,8 @@
                                        updated-tree-map)}
             updated-world (merge (:world game) {:areas [updated-area]})]
         (merge game {:world updated-world})))))
+
+(defn get-tree-types
+  "Returns a list of available tree types."
+  [area]
+  (w/walk :type conj (:trees area)))

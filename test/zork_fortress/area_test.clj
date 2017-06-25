@@ -50,6 +50,13 @@
       (is (= {:type "oak" :trees [{:id 1 :type "oak" :log-count 10}]}
              (a/get-tree-type-from-area game 1 "oak"))))))
 
+(deftest test-getting-tree-types
+  (testing "List of available tree types should be returned."
+    (let [game (h/get-test-game)
+          game (a/add-tree-to-area game 1 "pine" 1)
+          area (g/get-current-area game)]
+      (is (= ["oak" "pine"] (a/get-tree-types area))))))
+
 (deftest test-getting-next-tree-id
   (testing "Correct id should be returned."
     (let [game (h/get-test-game)]
