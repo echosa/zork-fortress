@@ -3,7 +3,8 @@
         [zork-fortress.commands.history :only [history-command show-turn-in-history]]
         [zork-fortress.commands.look :only [look-command]]
         [zork-fortress.commands.inventory :only [inventory-command]]
-        [zork-fortress.commands.chop :only [chop-command chop-command-effects]]))
+        [zork-fortress.commands.chop :only [chop-command chop-command-effects]])
+  (:require [clojure.string :as str]))
 
 (defn get-new-last-turn
   "Generate a new last turn entry for the game."
@@ -31,14 +32,24 @@
       'chop (chop-command-effects game args)
       game)))
 
+(defn parse-input
+  "Parse the user input into a command."
+  [input]
+  (let [parsed-string (str/split input #"\s+")
+        command (first parsed-string)
+        args (subvec parsed-string 1)]
+    (when (not (or (nil? command) (empty? command)))
+      {:trigger (symbol command) :args args})))
+
 ;; TODO implement aliases
 (defn run-command
   "Run the given command."
-  [game command]
-  (if (nil? command)
-    game
-    (merge (perform-command-effects game command)
-           {:last-turn (get-new-last-turn game command)
-            :turn-history (get-new-turn-history game)})))
+  [game user-input]
+  (let [command (parse-input user-input)]
+    (if (nil? command)
+      game
+      (merge (perform-command-effects game command)
+             {:last-turn    (get-new-last-turn game command)
+              :turn-history (get-new-turn-history game)}))))
 
 

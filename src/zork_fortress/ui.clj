@@ -25,18 +25,9 @@
     (when last-response
       (println last-response))))
 
-(defn parse-input
-  "Parse the user input into a command."
-  [input]
-  (let [parsed-string (str/split input #"\s+")
-        command (first parsed-string)
-        args (subvec parsed-string 1)]
-    (when (not (or (nil? command) (empty? command)))
-      {:trigger (symbol command) :args args})))
-
 (defn process-user-input
   "Process the user's input and loops."
   [game]
   (let [user-input (or (read-line) "")]
     (when (not= user-input "quit")
-      (commands/run-command game (parse-input user-input)))))
+      (commands/run-command game user-input))))
