@@ -57,7 +57,7 @@
   (testing "Getting a game should have the given last turn."
     (let [player (h/get-test-player)
           world (h/get-test-world)
-          last-turn {:command 'cmd :response "Response."}
+          last-turn {:command 'command :response "Response."}
           game (h/get-test-game :last-turn last-turn)]
       (is (= player (:player game)))
       (is (= world (:world game)))
@@ -69,7 +69,7 @@
   (testing "Getting a game should have the given turn history."
     (let [player (h/get-test-player)
           world (h/get-test-world)
-          turn-history [{:command 'cmd :response "Response."}]
+          turn-history [{:command 'command :response "Response."}]
           game (h/get-test-game :turn-history turn-history)]
       (is (= player (:player game)))
       (is (= world (:world game)))
@@ -80,8 +80,8 @@
   (testing "Getting a game should have the given last turn and turn history."
     (let [player (h/get-test-player)
           world (h/get-test-world)
-          last-turn {:command 'cmd :response "Response."}
-          turn-history [{:command 'cmd2 :response "Response 2."}]
+          last-turn {:command 'command :response "Response."}
+          turn-history [{:command 'command2 :response "Response 2."}]
           game (h/get-test-game :last-turn last-turn :turn-history turn-history)]
       (is (= player (:player game)))
       (is (= world (:world game)))

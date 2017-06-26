@@ -1,7 +1,7 @@
 (ns zork-fortress.commands.history-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h])
-  (:use [zork-fortress.commands :only [run-cmd]]))
+  (:use [zork-fortress.commands :only [run-command]]))
 
 (deftest test-valid-commands-should-be-added-to-history
   (testing "Valid commands should be added to the command history."
@@ -12,7 +12,7 @@
           game (h/get-test-game :last-turn last-turn
                                 :turn-history turn-history)]
       (is (= (conj turn-history last-turn)
-             (:turn-history (run-cmd game {:trigger 'look :args []})))))))
+             (:turn-history (run-command game {:trigger 'look :args []})))))))
 
 (deftest test-invalid-commands-should-not-be-added-to-history
   (testing "Valid commands should be added to the command history."
@@ -24,7 +24,7 @@
           game (h/get-test-game :last-turn last-turn
                                 :turn-history turn-history)]
       (is (= turn-history
-             (:turn-history (run-cmd game {:trigger 'look :args []})))))))
+             (:turn-history (run-command game {:trigger 'look :args []})))))))
 
 
 (deftest test-history-command-should-default-to-4-items
@@ -55,7 +55,7 @@ Fourth message.
 > fifth
 Fifth message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game {:trigger 'history :args []}))))))))
+             (:response (:last-turn (run-command game {:trigger 'history :args []}))))))))
 
 
 (deftest test-history-command-with-less-than-4-should-display-less-than-4-items
@@ -79,7 +79,7 @@ Second message.
 > third
 Third message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game {:trigger 'history :args []}))))))))
+             (:response (:last-turn (run-command game {:trigger 'history :args []}))))))))
 
 (deftest test-history-command-should-not-be-added-to-history
   (testing "History command should not be added to the history."
@@ -110,7 +110,7 @@ Second message.
 > third
 Third message.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game {:trigger 'history :args []}))))))))
+             (:response (:last-turn (run-command game {:trigger 'history :args []}))))))))
 
 (deftest test-history-command-should-display-last-turn-if-valid
   (testing "History command should display the last turn, if it was valid."
@@ -135,7 +135,7 @@ Third message.
 > look
 You see nothing.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game {:trigger 'history :args []}))))))))
+             (:response (:last-turn (run-command game {:trigger 'history :args []}))))))))
 
 (deftest test-history-command-should-limit-display-to-given-count
   (testing "History command should limit its display to the given count."
@@ -154,7 +154,7 @@ Third message.
 > look
 You see nothing.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd game {:trigger 'history :args ["2"]}))))))))
+             (:response (:last-turn (run-command game {:trigger 'history :args ["2"]}))))))))
 
 (deftest test-history-should-work-multiple-times
   (testing "Running the history command shouldn't clear the history."
@@ -165,9 +165,9 @@ First Area [plains]
 
 You see 1 oak tree.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd
-                                     (run-cmd
-                                      (run-cmd game {:trigger 'look :args []})
+             (:response (:last-turn (run-command
+                                     (run-command
+                                      (run-command game {:trigger 'look :args []})
                                       {:trigger 'history :args []})
                                      {:trigger 'history :args []}))))))))
 
@@ -178,4 +178,4 @@ You see 1 oak tree.
 > chop oak
 Received 10 oak logs.
 *** END HISTORY ***"
-             (:response (:last-turn (run-cmd (run-cmd game {:trigger 'chop :args ["oak"]}) {:trigger 'history :args []}))))))))
+             (:response (:last-turn (run-command (run-command game {:trigger 'chop :args ["oak"]}) {:trigger 'history :args []}))))))))

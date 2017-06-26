@@ -1,14 +1,14 @@
 (ns zork-fortress.commands-test
   (:require [clojure.test :refer :all]
             [zork-fortress.test-helpers :as h])
-  (:use [zork-fortress.commands :only [run-cmd]]))
+  (:use [zork-fortress.commands :only [run-command]]))
 
 (deftest test-commands-should-set-last-turn
   (testing "Look command should return message."
     (let [game (h/get-test-game)]
       (is (= nil (:last-turn game))
           (= {:command {:trigger 'look} :response "You see nothing."}
-             (:last-turn (run-cmd game {:trigger 'look})))))))
+             (:last-turn (run-command game {:trigger 'look})))))))
 
 (deftest test-commands-should-set-history
   (testing "Look command should return message."
@@ -16,7 +16,7 @@
                                             :response "Previous command."})]
       (is (= [] (:turn-history game))
           (= [{:command {:trigger 'prev} :response "Previous command."}]
-             (:turn-history (run-cmd game {:trigger 'look})))))))
+             (:turn-history (run-command game {:trigger 'look})))))))
 
 (deftest test-invalid-commands-are-marked-as-such
   (testing "Invalid command should respond as such."
@@ -24,4 +24,4 @@
       (is (= {:command {:trigger 'foobar}
               :response "Invalid command."
               :invalid true}
-              (:last-turn (run-cmd game {:trigger 'foobar})))))))
+              (:last-turn (run-command game {:trigger 'foobar})))))))

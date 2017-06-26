@@ -28,7 +28,7 @@
       (first tree-types)
       type)))
 
-(defn chop-cmd
+(defn chop-command
   "The chop command."
   [game args]
   (let [tree-type (parse-tree-type game (first args))
@@ -47,7 +47,7 @@
                   (logs-received-msg log-count tree-type)))
               invalid-trees-msg)))))))
 
-(defn chop-cmd-effects
+(defn chop-command-effects
   "The chop command changes to the game."
   [game args]
   (if (empty? args)

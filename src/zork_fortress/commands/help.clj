@@ -13,27 +13,27 @@
   "Returns a list of command for which help is available."
   []
   (let [ns-prefix "zork-fortress.commands."
-        cmd-ns (sort
+        command-ns (sort
                 (comparator (fn [ns1 ns2] (compare (str ns1) (str ns2))))
                 (filter (fn [ns]
                           (and (= -1 (.indexOf (str ns) "-test")) (not= -1 (.indexOf (str ns) ns-prefix)))) (all-ns)))]
     (str "Command list:\n\n"
          (w/walk (fn [ns] (str (subs (str ns) (count ns-prefix)) "\n"))
                  (fn [s] (apply str (sort s)))
-                 cmd-ns))))
+                 command-ns))))
 
-(defn help-cmd
+(defn help-command
   "Shows helpful information to the user."
   [args]
   (if (empty? args)
     default-help
-    (let [cmd (first args)]
-      (if (= cmd "commands")
+    (let [command (first args)]
+      (if (= command "commands")
         (available-commands-list)
-        (let [cmd-ns (find-ns (symbol (str "zork-fortress.commands." cmd)))]
-          (if (nil? cmd-ns)
+        (let [command-ns (find-ns (symbol (str "zork-fortress.commands." command)))]
+          (if (nil? command-ns)
             invalid-command-msg
-            (let [help-msg (ns-resolve cmd-ns (symbol (str cmd "-cmd-help")))]
+            (let [help-msg (ns-resolve command-ns (symbol (str command "-command-help")))]
               (if (nil? help-msg)
                 invalid-command-msg
                 (if (var? help-msg)

@@ -1,7 +1,7 @@
 (ns zork-fortress.ui
   (:require [clojure.string :as str]
             [zork-fortress.player :as p]
-            [zork-fortress.commands :as cmds]))
+            [zork-fortress.commands :as commands]))
 
 (defn welcome-message
   "Print a welcome message for the user."
@@ -39,4 +39,4 @@
   [game]
   (let [user-input (or (read-line) "")]
     (when (not= user-input "quit")
-      (cmds/run-cmd game (parse-input user-input)))))
+      (commands/run-command game (parse-input user-input)))))

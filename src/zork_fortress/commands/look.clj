@@ -2,7 +2,7 @@
   (:require [zork-fortress.game :as g]
             [clojure.string :as str]))
 
-(def look-cmd-help
+(def look-command-help
   "Use look to look around.")
 
 (defn get-tree-info
@@ -14,7 +14,7 @@
                        (str "You see " count " " type
                             (if (= 1 count) " tree." " trees.")))))))
 
-(defn look-cmd
+(defn look-command
   "The look command."
   [game]
   (let [area (g/get-current-area game)]

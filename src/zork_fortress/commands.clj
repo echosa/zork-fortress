@@ -1,9 +1,9 @@
 (ns zork-fortress.commands
-  (:use [zork-fortress.commands.help :only [help-cmd]]
-        [zork-fortress.commands.history :only [history-cmd show-turn-in-history]]
-        [zork-fortress.commands.look :only [look-cmd]]
-        [zork-fortress.commands.inventory :only [inventory-cmd]]
-        [zork-fortress.commands.chop :only [chop-cmd chop-cmd-effects]]))
+  (:use [zork-fortress.commands.help :only [help-command]]
+        [zork-fortress.commands.history :only [history-command show-turn-in-history]]
+        [zork-fortress.commands.look :only [look-command]]
+        [zork-fortress.commands.inventory :only [inventory-command]]
+        [zork-fortress.commands.chop :only [chop-command chop-command-effects]]))
 
 (defn get-new-last-turn
   "Generate a new last turn entry for the game."
@@ -11,11 +11,11 @@
   (let [args (:args command)]
     (merge {:command command}
            (condp = (:trigger command)
-             'help {:response (help-cmd args)}
-             'history {:response (history-cmd game args)}
-             'look {:response (look-cmd game)}
-             'chop {:response (chop-cmd game args)}
-             'inventory {:response (inventory-cmd game)}
+             'help {:response (help-command args)}
+             'history {:response (history-command game args)}
+             'look {:response (look-command game)}
+             'chop {:response (chop-command game args)}
+             'inventory {:response (inventory-command game)}
              {:response "Invalid command." :invalid true}))))
 
 (defn get-new-turn-history
@@ -28,11 +28,11 @@
   [game command]
   (let [args (:args command)]
     (condp = (:trigger command)
-      'chop (chop-cmd-effects game args)
+      'chop (chop-command-effects game args)
       game)))
 
 ;; TODO implement aliases
-(defn run-cmd
+(defn run-command
   "Run the given command."
   [game command]
   (if (nil? command)

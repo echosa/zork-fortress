@@ -4,7 +4,7 @@
 
 (def default-history-show-count 4)
 
-(def history-cmd-help
+(def history-command-help
   "The history command shows your last few moves.")
 
 (defn turn-history-string
@@ -31,7 +31,7 @@
              (not= 'help (-> turn :command :trigger)))
     turn))
 
-(defn history-cmd
+(defn history-command
   "The history command."
   [game args]
   (let [valid-last-turn (show-turn-in-history (:last-turn game))

@@ -15,7 +15,7 @@
                             (str (:count log) " " (:type log)
                                  (if (= 1 (:count log)) " log." " logs.")))))))
 
-(defn inventory-cmd
+(defn inventory-command
   "The inventory command."
   [game]
   (let [inv (i/get-player-inventory game)]
