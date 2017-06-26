@@ -6,18 +6,27 @@
         [zork-fortress.commands.chop :only [chop-command chop-command-effects]])
   (:require [clojure.string :as str]))
 
+(defn execute-command-or-alias
+  "Executes a command or alias."
+  [game command args]
+  (condp = (:trigger command)
+    'help {:response (help-command args)}
+    '? {:response (help-command args)}
+    'history {:response (history-command game args)}
+    'look {:response (look-command game)}
+    'l {:response (look-command game)}
+    'chop {:response (chop-command game args)}
+    'inventory {:response (inventory-command game)}
+    'inv {:response (inventory-command game)}
+    'i {:response (inventory-command game)}
+    {:response "Invalid command." :invalid true}))
+
 (defn get-new-last-turn
   "Generate a new last turn entry for the game."
   [game command]
   (let [args (:args command)]
     (merge {:command command}
-           (condp = (:trigger command)
-             'help {:response (help-command args)}
-             'history {:response (history-command game args)}
-             'look {:response (look-command game)}
-             'chop {:response (chop-command game args)}
-             'inventory {:response (inventory-command game)}
-             {:response "Invalid command." :invalid true}))))
+           (execute-command-or-alias game command args))))
 
 (defn get-new-turn-history
   "Generate a new turn history for the game."
@@ -41,7 +50,6 @@
     (when (not (or (nil? command) (empty? command)))
       {:trigger (symbol command) :args args})))
 
-;; TODO implement aliases
 (defn run-command
   "Run the given command."
   [game user-input]
