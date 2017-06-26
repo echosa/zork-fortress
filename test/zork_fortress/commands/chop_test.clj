@@ -35,10 +35,10 @@
 (deftest test-chopping-tree-should-add-logs-to-inventory
   (testing "Chopping a tree should add the logs to your inventory."
     (let [game (run-cmd (h/get-test-game) {:trigger 'chop :args ["oak"]})]
-      (is (= 10 (:count (assoc (:logs (:inventory (:player game))) :type "oak")))))))
+      (is (= 10 (inv/get-inventory-log-count game "oak"))))))
 
-(deftest test-chopping-tree-should-add-logs-to-inventory
-  (testing "Chopping a tree should add the logs to your inventory."
+(deftest test-chopping-one-of-many-tree-types-should-add-logs-to-inventory
+  (testing "Chopping one of many tree types should add the logs to your inventory."
     (let [game (h/get-test-game)
           game (a/add-tree-to-area game 1 "pine" 1)
           game (run-cmd game {:trigger 'chop :args ["pine"]})]
@@ -59,3 +59,17 @@
       (is (= [{:id 2 :type "oak" :log-count 5}]
              (a/get-trees-with-type-from-area (g/get-current-area game) "oak")))
       (is (nil? (a/area-has-tree-with-id (g/get-current-area game) "oak" 1))))))
+
+(deftest test-chopping-unspecified-tree-with-only-one-type-available-should-chop-that-type
+  (testing "Chopping an unspecified tree with only one type available."
+    (let [game (h/get-test-game)
+          game (run-cmd game {:trigger 'chop :args ["tree"]})]
+      (is (= "Received 10 oak logs." (:response (:last-turn game))))
+      (is (= 10 (inv/get-inventory-log-count game "oak"))))))
+
+(deftest test-chopping-unspecified-tree-with-more-than-one-type-available-should-ask-for-clarification
+  (testing "Chopping an unspecified tree with more than one type available should ask for clarification."
+    (let [game (h/get-test-game)
+          game (a/add-tree-to-area game 1 "pine" 1)]
+      (is (= "Which tree would you like to chop?"
+             (:response (:last-turn (run-cmd game {:trigger 'chop :args ["tree"]}))))))))

@@ -14,7 +14,6 @@
   "Returns the index of the log type in the inventory."
   [game log-type]
   (let [logs-in-inventory (get-inventory-logs game)]
-    (assert logs-in-inventory)
     (let [log-inventory-entry (or (first (filterv #(= (:type %) log-type) logs-in-inventory)) {})]
       (.indexOf logs-in-inventory log-inventory-entry))))
 
@@ -23,7 +22,6 @@
   [game log-type]
   (let [log-count (:count (nth (get-inventory-logs game)
                                (get-inventory-log-type-index game log-type)))]
-    (assert (instance? Number log-count))
     log-count))
 
 (defn update-log-inventory
@@ -43,8 +41,7 @@
         log-count (:log-count tree)
         log-type-index (get-inventory-log-type-index game (:type tree))]
     (if (= log-type-index -1)
-      (let [current-logs (get-inventory-logs game)
-            _ (assert current-logs)]
+      (let [current-logs (get-inventory-logs game)]
           (assoc-in game [:player :inventory :logs]
                         (conj current-logs
                               {:type (:type tree) :count log-count})))
