@@ -31,6 +31,7 @@
       'chop (chop-cmd-effects game args)
       game)))
 
+;; TODO implement aliases
 (defn run-cmd
   "Run the given command."
   [game command]

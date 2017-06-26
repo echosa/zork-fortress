@@ -7,6 +7,7 @@
             [zork-fortress.commands.chop :as chop])
   (:use [zork-fortress.commands :only [run-cmd]]))
 
+;; TODO change tests to take string commands, e.g. (run "chop oak")
 (deftest test-chopping-with-no-trees-should-display-an-error-msg
   (testing "Trying to chop trees where there are none should show an error message."
     (let [game (h/get-test-game :without-trees true)]
